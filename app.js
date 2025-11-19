@@ -433,7 +433,11 @@ function identifySections(text) {
   // Sort by position in text
   headerMatches.sort((a, b) => a.index - b.index);
 
-  console.log("Identified section headers:", headerMatches);
+  console.log("=== SECTION IDENTIFICATION DEBUG ===");
+  console.log("Total headers found:", headerMatches.length);
+  for (const h of headerMatches) {
+    console.log(`  - ${h.sectionName}: "${h.keyword}" at index ${h.index}`);
+  }
 
   // Remove overlapping matches: if two keywords from the same section are very close,
   // keep only the longer one (e.g., keep "TECHNICAL SKILLS", discard "SKILLS")
@@ -459,6 +463,11 @@ function identifySections(text) {
     }
   }
 
+  console.log("After deduplication:", uniqueMatches.length);
+  for (const h of uniqueMatches) {
+    console.log(`  - ${h.sectionName}: "${h.keyword}" at index ${h.index}`);
+  }
+
   // Extract content between consecutive section headers
   for (let i = 0; i < uniqueMatches.length; i++) {
     const currentHeader = uniqueMatches[i];
@@ -471,13 +480,16 @@ function identifySections(text) {
 
     let content = text.substring(startIndex, endIndex).trim();
 
+    console.log(`\n${currentHeader.sectionName}:`);
+    console.log(
+      `  Start: ${startIndex}, End: ${endIndex}, Length: ${content.length}`
+    );
+    console.log(`  Preview: "${content.substring(0, 150)}..."`);
+
     // Only store the first occurrence of each section type
     // (in case the section header appears multiple times, we keep the earliest)
     if (!sections[currentHeader.sectionName] && content.length > 0) {
       sections[currentHeader.sectionName] = content;
-      console.log(
-        `Found ${currentHeader.sectionName}: ${content.substring(0, 100)}...`
-      );
     }
   }
 
@@ -489,13 +501,9 @@ function parseWorkExperience(text) {
 
   const jobs = [];
 
-  // Strategy: Find date patterns to identify where each job ends
-  // Each job has format:
-  // - Position Title (optional: Client/Project names)
-  // - Company Name (optional: Role type)
-  // - Start Date - End Date (or Present)
-  // - Location
-  // - Description with bullet points
+  // Strategy: Find date patterns to identify job entries
+  // Format is typically: Position Title  Company Name  Date - Date  Description
+  // The two dates are the key identifier for separate jobs
 
   // Find all date patterns like "June 2020 - Aug 2023" or "Sep. 2023 - Present"
   const datePattern =
@@ -519,54 +527,57 @@ function parseWorkExperience(text) {
     const dateInfo = dateMatches[i];
     const nextDateInfo = dateMatches[i + 1];
 
-    // Job details are BEFORE the date
+    // Everything BEFORE this date is the job header (position/company info)
     let headerStart =
       i === 0 ? 0 : dateMatches[i - 1].index + dateMatches[i - 1].length;
     let headerEnd = dateInfo.index;
     let header = text.substring(headerStart, headerEnd).trim();
 
-    // Description is AFTER the date
+    // Everything AFTER this date until the next date is the job description
     let descStart = dateInfo.index + dateInfo.length;
     let descEnd = nextDateInfo ? nextDateInfo.index : text.length;
     let description = text.substring(descStart, descEnd).trim();
 
-    // Remove location line (e.g., "Chennai, India")
-    description = description
-      .replace(
-        /\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*),\s*([A-Z]{2}|[A-Z][a-z]+)\b\s*/g,
-        ""
-      )
-      .trim();
-
-    // Parse header: Usually has position, company, role info
-    // Split by multiple spaces or newlines
+    // Parse header: Usually has position on one line, company on another (or same line)
+    // Split by newline/bullet, and reverse-engineer position/company
     const headerLines = header
       .split(/[\n•]+/)
       .map((s) => s.trim())
-      .filter((s) => s.length > 0);
+      .filter((s) => s.length > 0 && !s.match(/^\s*$/));
 
-    // Assume first line is position (may include clients in parens)
-    // Second line is company (may include role type in parens)
-    let position = headerLines[0] || "";
-    let company = headerLines[1] || "";
+    // Typically: first line is position, second is company
+    // OR: first line contains "Position Title | Company Name"
+    let position = "";
+    let company = "";
 
-    // If we only have one line, split by the parenthesis pattern
-    if (headerLines.length === 1 && header.includes("(")) {
-      // Contains parenthetical info, try to split more intelligently
-      const allText = header;
-      const positionMatch = allText.match(/^([^(]+?)\s*\([^)]*\)/);
-      if (positionMatch) {
-        position = positionMatch[1].trim();
-        company = allText.replace(position, "").trim();
+    if (headerLines.length >= 2) {
+      position = headerLines[0];
+      company = headerLines[1];
+    } else if (headerLines.length === 1) {
+      // Single line - might have pipe separator or just one piece of info
+      const line = headerLines[0];
+      if (line.includes("|")) {
+        const parts = line.split("|").map((p) => p.trim());
+        position = parts[0] || "";
+        company = parts[1] || "";
+      } else {
+        // Assume it's the position, company will be empty
+        position = line;
       }
     }
 
+    // Remove location from description (e.g., "Chennai, India")
+    const locationRemoved = description.replace(
+      /\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*),\s*([A-Z]{2}|[A-Z][a-z]+)\b\s*/,
+      ""
+    );
+
     jobs.push({
-      position: position,
-      company: company,
+      position: position || "Position",
+      company: company || "Company",
       startDate: dateInfo.startDate,
       endDate: dateInfo.endDate,
-      summary: description,
+      summary: locationRemoved.trim(),
     });
   }
 
@@ -577,51 +588,88 @@ function parseEducation(text) {
   if (!text) return [];
 
   const education = [];
-  const blocks = text.split(/\n\s*\n/).filter((b) => b.trim().length > 0);
 
-  for (const block of blocks) {
-    const lines = block
-      .split("\n")
-      .map((l) => l.trim())
-      .filter((l) => l.length > 0);
-    if (lines.length === 0) continue;
+  // Each line of text contains one education entry
+  // Format typically: Institution Location Degree Field Year
+  // e.g.: "DePaul University Chicago, Illinois Bachelor of Science in Computer Science May 2016"
 
-    const institution = lines[0] || "";
-    const degree = lines[1] || "";
+  const lines = text
+    .split("\n")
+    .map((l) => l.trim())
+    .filter((l) => l.length > 0 && l.length > 10); // Skip tiny lines
 
-    // Look for dates
-    const dateRegex = /(\w+\.?\s+\d{4})\s*[-–—]\s*(\w+\.?\s+\d{4}|Present)/i;
-    const dateMatch = block.match(dateRegex);
-    const startDate = dateMatch ? dateMatch[1] : "";
-    const endDate = dateMatch ? dateMatch[2] : "";
-
-    // Try to extract degree type and area
-    let studyType = "Degree";
-    let area = "";
-
-    if (degree.toLowerCase().includes("master")) {
-      studyType = "Master's";
-      area = degree.replace(/master'?s?\s*(in|of)?/i, "").trim();
-    } else if (degree.toLowerCase().includes("bachelor")) {
-      studyType = "Bachelor's";
-      area = degree.replace(/bachelor'?s?\s*(in|of)?/i, "").trim();
-    } else {
-      area = degree;
-    }
-
-    // Try to find location
-    const locationRegex = /([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*),\s*([A-Z]{2,})/;
-    const locationMatch = block.match(locationRegex);
+  for (const line of lines) {
+    // Extract location (City, State or City, Country pattern)
+    const locationMatch = line.match(
+      /\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*),\s*([A-Z][a-z]+|[A-Z]{2}|[A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)\b/
+    );
     const location = locationMatch ? locationMatch[0] : "";
 
-    education.push({
-      institution: institution,
-      studyType: studyType,
-      area: area,
-      startDate: startDate,
-      endDate: endDate,
-      location: location,
-    });
+    // Extract year (4-digit starting with 2)
+    const yearMatch = line.match(/\b(20\d{2})\b/);
+    const year = yearMatch ? yearMatch[1] : "";
+
+    // Detect degree type
+    let studyType = "Degree";
+    if (/\bMaster['']?s?\b/i.test(line)) {
+      studyType = "Master's";
+    } else if (/\bBachelor['']?s?\b/i.test(line)) {
+      studyType = "Bachelor's";
+    } else if (/\b(PhD|Doctorate)\b/i.test(line)) {
+      studyType = "Doctorate";
+    }
+
+    // Extract the field of study by looking for "Bachelor/Master [of|in] FIELD"
+    let area = "";
+    const fieldPattern =
+      /(?:Bachelor|Master|PhD)['']?s?(?:\s+(?:of|in))?\s+([^,]+?)(?:\s+(?:in|from|,|\d{4}|May|June|July|August|September|October|November|December))/i;
+    const fieldMatch = line.match(fieldPattern);
+    if (fieldMatch) {
+      area = fieldMatch[1].trim();
+    }
+
+    // If no field extracted, try simpler pattern
+    if (!area) {
+      const simpleFieldPattern =
+        /(?:Science|Technology|Engineering|Arts|Business|Medicine|Law)[\w\s]*/i;
+      const simpleMatch = line.match(simpleFieldPattern);
+      if (simpleMatch) {
+        area = simpleMatch[0].trim();
+      }
+    }
+
+    // Extract institution - everything before the location
+    let institution = line;
+    if (locationMatch) {
+      institution = line.substring(0, locationMatch.index).trim();
+    }
+
+    // Clean up institution name - remove degree and field info
+    institution = institution.replace(/Bachelor[\w\s]+/i, "");
+    institution = institution.replace(/Master[\w\s]+/i, "");
+    institution = institution.replace(/of|in|and|,/g, "").trim();
+
+    // If institution is still very long, try to extract just the school name
+    if (institution.length > 50) {
+      const nameMatch = institution.match(
+        /^([A-Z][A-Za-z\s]+?)\s+(?:[A-Z][a-z]+)?(?:\s+[A-Z][a-z]+)?$/
+      );
+      if (nameMatch) {
+        institution = nameMatch[1].trim();
+      }
+    }
+
+    // Only add if we have meaningful data
+    if (institution.length > 3) {
+      education.push({
+        institution: institution,
+        studyType: studyType,
+        area: area || "Education",
+        startDate: "",
+        endDate: year,
+        location: location,
+      });
+    }
   }
 
   return education;
@@ -631,32 +679,47 @@ function parseSkills(text) {
   if (!text) return [];
 
   const skills = [];
+
+  // Split by lines, clean up whitespace
   const lines = text
     .split("\n")
     .map((l) => l.trim())
-    .filter((l) => l.length > 0);
+    .filter((l) => l.length > 0 && !l.match(/^\s*$/));
 
-  for (const line of lines) {
+  for (let i = 0; i < lines.length; i++) {
+    let line = lines[i];
+
+    // Clean up collapsed whitespace - replace excessive spaces with single space
+    line = line.replace(/\s+/g, " ").trim();
+
+    // Skip empty lines or lines that are too short
+    if (line.length < 3) continue;
+
     // Check if line has a category (e.g., "Programming Languages: Java, Python")
     const colonIndex = line.indexOf(":");
     if (colonIndex > 0) {
       const name = line.substring(0, colonIndex).trim();
       const keywordsStr = line.substring(colonIndex + 1).trim();
+
+      // Split keywords by comma, semicolon, pipe, or bullet
       const keywords = keywordsStr
         .split(/[,;•|]/)
         .map((s) => s.trim())
-        .filter((s) => s.length > 0);
+        .filter((s) => s.length > 0 && !s.match(/^\s*$/));
 
-      skills.push({
-        name: name,
-        keywords: keywords,
-      });
+      if (keywords.length > 0) {
+        skills.push({
+          name: name,
+          keywords: keywords,
+        });
+      }
     } else {
-      // Just a list of skills
+      // Just a list of skills without a category header
       const keywords = line
         .split(/[,;•|]/)
         .map((s) => s.trim())
-        .filter((s) => s.length > 0);
+        .filter((s) => s.length > 0 && !s.match(/^\s*$/));
+
       if (keywords.length > 0) {
         skills.push({
           name: "Skills",

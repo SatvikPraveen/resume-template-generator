@@ -521,8 +521,12 @@ function identifySections(text) {
     const next = uniqueMatches[i + 1];
     const startIdx = current.index + current.length;
     const endIdx = next ? next.index : text.length;
+    const headerText = text.substring(current.index, Math.min(current.index + 30, text.length)).replace(/\n/g, " ");
     console.log(
-      `[Section: ${current.sectionName}] from ${startIdx} to ${endIdx} (${
+      `[Section: ${current.sectionName}] Header: "${headerText}..." at index ${current.index}`
+    );
+    console.log(
+      `  Content from ${startIdx} to ${endIdx} (${
         endIdx - startIdx
       } chars)`
     );

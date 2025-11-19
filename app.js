@@ -82,7 +82,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 function initializeEventListeners() {
   console.log("[Init] Starting event listener setup...");
-  
+
   // File upload
   const pdfInput = document.getElementById("pdfInput");
   const uploadBox = document.getElementById("uploadBox");
@@ -96,10 +96,10 @@ function initializeEventListeners() {
 
   pdfInput.addEventListener("change", handleFileSelect);
   console.log("[Init] ✅ File input change listener attached");
-  
+
   parseBtn.addEventListener("click", handleParsePDF);
   console.log("[Init] ✅ Parse button click listener attached");
-  
+
   removeFile.addEventListener("click", handleRemoveFile);
 
   // Drag and drop
@@ -149,14 +149,21 @@ function renderSamplePreview() {
 function handleFileSelect(e) {
   console.log("[File Upload] File select triggered");
   console.log("[File Upload] event.target.files:", e.target.files);
-  
+
   const file = e.target.files[0];
   if (!file) {
     console.warn("[File Upload] No file selected");
     return;
   }
 
-  console.log("[File Upload] File selected:", file.name, "Size:", file.size, "Type:", file.type);
+  console.log(
+    "[File Upload] File selected:",
+    file.name,
+    "Size:",
+    file.size,
+    "Type:",
+    file.type
+  );
 
   if (!file.type.includes("pdf")) {
     console.error("[File Upload] Not a PDF file, type is:", file.type);
@@ -175,9 +182,12 @@ function handleFileSelect(e) {
 
   // Read file as ArrayBuffer
   const reader = new FileReader();
-  
+
   reader.onload = function (event) {
-    console.log("[File Upload] FileReader onload - buffer size:", event.target.result.byteLength);
+    console.log(
+      "[File Upload] FileReader onload - buffer size:",
+      event.target.result.byteLength
+    );
     STATE.pdfArrayBuffer = event.target.result;
     showFileInfo(file.name);
     document.getElementById("parseBtn").disabled = false;
@@ -249,7 +259,7 @@ function handleDrop(e) {
 // ==================== PDF PARSING ====================
 async function handleParsePDF() {
   console.log("[PDF Parsing] Starting...");
-  
+
   if (!STATE.pdfArrayBuffer) {
     console.error("[PDF Parsing] No PDF buffer available");
     alert("Please select a PDF file first.");
@@ -261,11 +271,17 @@ async function handleParsePDF() {
   try {
     // Check if PDFTextExtractor is available
     console.log("[PDF Parsing] Checking PDFTextExtractor...");
-    console.log("[PDF Parsing] window.PDFTextExtractor =", typeof window.PDFTextExtractor);
+    console.log(
+      "[PDF Parsing] window.PDFTextExtractor =",
+      typeof window.PDFTextExtractor
+    );
     console.log("[PDF Parsing] window.pdfjsLib =", typeof window.pdfjsLib);
-    
+
     if (!window.PDFTextExtractor || !PDFTextExtractor.extractText) {
-      throw new Error("PDFTextExtractor module not available. window.PDFTextExtractor=" + typeof window.PDFTextExtractor);
+      throw new Error(
+        "PDFTextExtractor module not available. window.PDFTextExtractor=" +
+          typeof window.PDFTextExtractor
+      );
     }
 
     console.log("[PDF Parsing] Extracting text from PDF...");
@@ -277,8 +293,14 @@ async function handleParsePDF() {
     console.log("[PDF Parsing] Parsing resume text...");
     STATE.resumeData = parseResumeText(STATE.rawText);
     console.log("[PDF Parsing] Resume data parsed:");
-    console.log("[PDF Parsing]   - Work entries:", STATE.resumeData.work.length);
-    console.log("[PDF Parsing]   - Education entries:", STATE.resumeData.education.length);
+    console.log(
+      "[PDF Parsing]   - Work entries:",
+      STATE.resumeData.work.length
+    );
+    console.log(
+      "[PDF Parsing]   - Education entries:",
+      STATE.resumeData.education.length
+    );
     console.log("[PDF Parsing]   - Skills:", STATE.resumeData.skills.length);
 
     // Update UI
@@ -291,7 +313,9 @@ async function handleParsePDF() {
 
     // Auto-select first template
     console.log("[PDF Parsing] Clicking classic template...");
-    const classicBtn = document.querySelector('.template-card[data-template="classic"]');
+    const classicBtn = document.querySelector(
+      '.template-card[data-template="classic"]'
+    );
     if (classicBtn) {
       classicBtn.click();
     } else {
@@ -419,48 +443,89 @@ function extractLocation(text) {
 function identifySections(text) {
   const sections = {};
 
-  const sectionKeywords = {
-    education: ["EDUCATION", "ACADEMIC"],
-    experience: ["EXPERIENCE", "PROFESSIONAL EXPERIENCE", "WORK EXPERIENCE"],
-    projects: ["PROJECTS", "PORTFOLIO"],
-    skills: ["TECHNICAL SKILLS", "SKILLS"],
-    summary: ["PROFESSIONAL SUMMARY", "SUMMARY"],
-    certifications: ["CERTIFICATIONS", "LICENSES"],
-    languages: ["LANGUAGES"],
-  };
+  // Section patterns with flexibility for spaced letters (E DUCATION, E XPERIENCE, etc.)
+  // Using array to control order - check TECHNICAL SKILLS before SKILLS to avoid partial matches
+  const sectionPatterns = [
+    {
+      sectionName: "education",
+      pattern: /\b(?:E\s*D\s*U\s*C\s*A\s*T\s*I\s*O\s*N|EDUCATION|ACADEMIC)\b/gi,
+    },
+    {
+      sectionName: "experience",
+      pattern:
+        /\b(?:E\s*X\s*P\s*E\s*R\s*I\s*E\s*N\s*C\s*E|EXPERIENCE|PROFESSIONAL\s+EXPERIENCE|WORK\s+EXPERIENCE)\b/gi,
+    },
+    {
+      sectionName: "projects",
+      pattern: /\b(?:P\s*R\s*O\s*J\s*E\s*C\s*T\s*S|PROJECTS|PORTFOLIO)\b/gi,
+    },
+    {
+      sectionName: "skills",
+      pattern:
+        /\b(?:T\s*E\s*C\s*H\s*N\s*I\s*C\s*A\s*L\s+S\s*K\s*I\s*L\s*L\s*S|TECHNICAL\s+SKILLS|SKILLS)\b/gi,
+    },
+    {
+      sectionName: "summary",
+      pattern: /\b(?:PROFESSIONAL\s+SUMMARY|SUMMARY)\b/gi,
+    },
+    {
+      sectionName: "certifications",
+      pattern: /\b(?:CERTIFICATIONS|LICENSES)\b/gi,
+    },
+    { sectionName: "languages", pattern: /\bLANGUAGES\b/gi },
+  ];
 
   const headerMatches = [];
 
-  // Case-INSENSITIVE matching to handle all variations
-  for (const [sectionName, keywords] of Object.entries(sectionKeywords)) {
-    for (const keyword of keywords) {
-      const regex = new RegExp(`\\b${keyword}\\b`, "gi");
-      let match;
-      while ((match = regex.exec(text)) !== null) {
-        headerMatches.push({
-          sectionName: sectionName,
-          keyword: keyword,
-          index: match.index,
-        });
-      }
+  // Find all section headers
+  for (const { sectionName, pattern } of sectionPatterns) {
+    let match;
+    pattern.lastIndex = 0;
+    while ((match = pattern.exec(text)) !== null) {
+      headerMatches.push({
+        sectionName: sectionName,
+        headerText: match[0],
+        index: match.index,
+        length: match[0].length,
+      });
     }
   }
 
+  // Sort by position in text
   headerMatches.sort((a, b) => a.index - b.index);
-  console.log(
-    "Headers found:",
-    headerMatches.map((h) => `${h.sectionName}@${h.index}`)
-  );
 
-  // Remove duplicates - keep first occurrence of each section
+  // Remove duplicates AND remove LANGUAGES if SKILLS exists (likely same section with spaced text)
   const uniqueMatches = [];
   const seenSections = new Set();
 
   for (const match of headerMatches) {
+    // Skip LANGUAGES if we already have SKILLS - they're often in the same section in this resume
+    if (match.sectionName === "languages" && seenSections.has("skills")) {
+      continue;
+    }
+
     if (!seenSections.has(match.sectionName)) {
       uniqueMatches.push(match);
       seenSections.add(match.sectionName);
     }
+  }
+
+  console.log(
+    "Headers found:",
+    uniqueMatches.map((h) => `${h.sectionName}@${h.index}`)
+  );
+
+  // Log the index positions to help debug section boundaries
+  for (let i = 0; i < uniqueMatches.length; i++) {
+    const current = uniqueMatches[i];
+    const next = uniqueMatches[i + 1];
+    const startIdx = current.index + current.length;
+    const endIdx = next ? next.index : text.length;
+    console.log(
+      `[Section: ${current.sectionName}] from ${startIdx} to ${endIdx} (${
+        endIdx - startIdx
+      } chars)`
+    );
   }
 
   // Extract content between section headers
@@ -468,9 +533,34 @@ function identifySections(text) {
     const current = uniqueMatches[i];
     const next = uniqueMatches[i + 1];
 
-    const startIndex = current.index + current.keyword.length;
+    // Start after the header
+    let startIndex = current.index + current.length;
+
+    // For EXPERIENCE section, look back to capture job title/company if it's on same line or right before the date
+    // This handles cases where the job info is between the header and next section
+    if (current.sectionName === "experience" && next) {
+      // Look ahead to find if there's a line with a date pattern right after the header
+      const sectionPreview = text.substring(
+        startIndex,
+        Math.min(startIndex + 500, text.length)
+      );
+      // If the section starts with description text (not a job title), search backwards from next header
+      if (
+        !/^\s*[A-Z][A-Za-z\s&(),-]+\s*([-–—]|[0-9]+|$)/.test(sectionPreview)
+      ) {
+        // No immediate job title found, look in content before next section for job entries
+        // Include more context from before the next section
+        startIndex = current.index + current.length;
+      }
+    }
+
+    // End at the next header (or end of text)
     const endIndex = next ? next.index : text.length;
-    const content = text.substring(startIndex, endIndex).trim();
+
+    let content = text.substring(startIndex, endIndex).trim();
+
+    // Remove leading newlines/spaces
+    content = content.replace(/^\s+/, "");
 
     if (content.length > 0) {
       sections[current.sectionName] = content;
@@ -540,7 +630,7 @@ function parseWorkExperience(text) {
       // Extract text before next date and find the header lines (non-bullet lines at the end)
       const beforeNextDate = text.substring(0, nextDateInfo.index);
       const allLines = beforeNextDate.split("\n");
-      
+
       // Find header lines working backwards from the end
       const nextJobHeaderLines = [];
       for (let j = allLines.length - 1; j >= 0; j--) {
@@ -581,120 +671,185 @@ function parseEducation(text) {
 
   const education = [];
 
-  // Education format in PDF:
-  // Institution Name
-  // City, State
-  // Degree Type and Field
-  // Month Year
-  //
-  // (repeat for each entry)
+  // Debug: log the actual text being parsed
+  if (text && text.length > 0) {
+    console.log(
+      "[parseEducation] Received text:",
+      text.substring(0, 150),
+      "... (length:",
+      text.length,
+      ")"
+    );
+  }
 
-  const lines = text
-    .split("\n")
-    .map((l) => l.trim())
-    .filter((l) => l.length > 0);
+  // Strategy: Find all date ranges first (these are our anchors)
+  // Then extract institution/degree/location around each date
+  // Format: [Institution] [StartDate - EndDate] [Degree] [Location]
 
-  // Group lines into education entries
-  // Each entry starts with an institution name (capitalized words)
-  // Followed by: City, State; Degree; Year
-  let currentEntry = {
-    institution: "",
-    location: "",
-    degree: "",
-    year: "",
-  };
+  const dateRangePattern =
+    /([A-Z][a-z]+\.?\s+\d{4})\s*[-–—]\s*((?:[A-Z][a-z]+\.?\s+\d{4})|Present)/g;
+  let dateMatch;
+  const dateMatches = [];
 
-  const entries = [];
+  while ((dateMatch = dateRangePattern.exec(text)) !== null) {
+    dateMatches.push({
+      fullMatch: dateMatch[0],
+      startDate: dateMatch[1],
+      endDate: dateMatch[2],
+      index: dateMatch.index,
+    });
+  }
 
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i];
+  // Process each date range found
+  for (let i = 0; i < dateMatches.length; i++) {
+    const current = dateMatches[i];
+    const next = dateMatches[i + 1];
 
-    // Check if this line contains a location (City, State pattern)
-    const isLocation = /,/.test(line) && /^[A-Z][\w\s]+,\s*[A-Z]/.test(line);
-    // Check if this line is a year
-    const isYear = /^\w+\s+\d{4}$/.test(line);
-    // Check if this line contains degree keywords
-    const isDegree = /bachelor|master|degree|phd|doctorate/i.test(line);
+    // Extract institution: look backward from date for institution keywords
+    // Strategy: Find all institutions before this date, take the one closest to date
+    let institution = "";
+    const beforeDateText = text.substring(
+      Math.max(0, current.index - 200),
+      current.index
+    );
+    // Find all institution occurrences
+    const institutionKeywords = [
+      "University",
+      "College",
+      "Institute",
+      "School",
+      "Academy",
+    ];
+    let closestInstitution = null;
+    let closestIndex = -1;
 
-    if (!isLocation && !isYear && !isDegree && currentEntry.institution === "") {
-      // This is likely an institution name
-      currentEntry.institution = line;
-    } else if (isLocation && currentEntry.institution !== "") {
-      // This is location
-      currentEntry.location = line;
-    } else if (isDegree && currentEntry.institution !== "") {
-      // This is degree info
-      currentEntry.degree = line;
-    } else if (isYear && currentEntry.institution !== "") {
-      // This is year - end of entry
-      currentEntry.year = line;
-      entries.push({ ...currentEntry });
-      currentEntry = {
-        institution: "",
-        location: "",
-        degree: "",
-        year: "",
-      };
+    for (const keyword of institutionKeywords) {
+      let searchStart = 0;
+      let idx;
+      // Find all occurrences of this keyword
+      while ((idx = beforeDateText.indexOf(keyword, searchStart)) !== -1) {
+        if (idx > closestIndex) {
+          closestIndex = idx;
+          // Extract institution name before this keyword
+          const beforeThis = beforeDateText.substring(0, idx);
+          // Look for the start of institution name (typically one or two words)
+          // Go backward to find capitalized word(s) - match SHORT names only
+          const nameMatch = beforeThis.match(
+            /([A-Z][A-Za-z&()]*(?:\s+[A-Z][A-Za-z&()]*)?)\s*$/
+          );
+          if (nameMatch) {
+            closestInstitution = nameMatch[1].trim() + " " + keyword;
+          }
+        }
+        searchStart = idx + 1;
+      }
     }
-  }
 
-  // Handle last entry if incomplete
-  if (currentEntry.institution !== "") {
-    entries.push(currentEntry);
-  }
+    if (closestInstitution) {
+      institution = closestInstitution;
+    }
 
-  // Parse entries into education objects
-  for (const entry of entries) {
+    // Extract degree and area: look forward from date end for degree keywords
     let studyType = "Degree";
     let area = "";
+    const afterDateStart = current.index + current.fullMatch.length;
+    let afterDateText;
 
-    if (entry.degree) {
-      if (/master/i.test(entry.degree)) {
-        studyType = "Master's";
-      } else if (/bachelor/i.test(entry.degree)) {
-        studyType = "Bachelor's";
-      }
+    // Determine end point for extracting text after date
+    // Use next date as boundary if available
+    if (next) {
+      afterDateText = text.substring(afterDateStart, next.index);
+    } else {
+      afterDateText = text.substring(afterDateStart, afterDateStart + 200);
+    }
 
-      // Extract field: "Bachelor of Science in Computer Science" -> "Computer Science"
-      const fieldMatch = entry.degree.match(
-        /(?:Bachelor|Master|PhD)(?:\s+of)?\s+(?:Science|Arts|Technology|Engineering)\s+(?:in\s+)?([^,]+)/i
+    // Look for degree pattern - extract "Degree in Field" but stop before next institution
+    // Handle both: "Master's in Computer Science" and "Master of Science in Computer Science"
+    console.log(
+      `[Entry ${i + 1}] afterDateText: "${afterDateText.substring(0, 80)}"`
+    );
+    let degreeMatch = afterDateText.match(
+      /^\s*((?:Master|Bachelor|PhD|Doctorate)'?s?\s+(?:in|of)\s+[A-Za-z\s]+?)(?=\s+[A-Z][a-z]+,|\s+(?:University|College|Institute|School|Academy)|\s+$)/i
+    );
+    console.log(
+      `[Entry ${i + 1}] Pattern 1 match: ${degreeMatch ? degreeMatch[1] : "NO"}`
+    );
+
+    // If first pattern didn't match, try a more lenient one that stops at punctuation or next institution
+    if (!degreeMatch) {
+      degreeMatch = afterDateText.match(
+        /^\s*((?:Master|Bachelor|PhD|Doctorate)'?s?\s+(?:in|of)?\s+[A-Za-z\s&(),-]+?)(?=\s+(?:University|College|Institute|School|Academy)|,|$)/i
       );
-      if (fieldMatch) {
-        area = fieldMatch[1].trim();
-      } else {
-        area = entry.degree;
+      console.log(
+        `[Entry ${i + 1}] Pattern 2 match: ${
+          degreeMatch ? degreeMatch[1] : "NO"
+        }`
+      );
+    }
+
+    // If STILL no match, try just looking for degree types without strict lookahead
+    if (!degreeMatch) {
+      degreeMatch = afterDateText.match(
+        /(Master|Bachelor|PhD|Doctorate)'?s?\s+(?:in|of)?\s+[A-Za-z\s&(),-]*/i
+      );
+      console.log(
+        `[Entry ${i + 1}] Pattern 3 match: ${
+          degreeMatch ? degreeMatch[1] : "NO"
+        }`
+      );
+    }
+
+    if (degreeMatch) {
+      const fullDegree = degreeMatch[1].trim();
+
+      // Extract study type
+      if (/master/i.test(fullDegree)) {
+        studyType = "Master's";
+      } else if (/bachelor/i.test(fullDegree)) {
+        studyType = "Bachelor's";
+      } else if (/phd|doctorate/i.test(fullDegree)) {
+        studyType = "PhD";
+      }
+      console.log(
+        `[Entry ${i + 1}] StudyType: ${studyType}, Full: "${fullDegree}"`
+      );
+
+      // Extract area (field of study) - everything after "in" or "of"
+      const fieldMatch = fullDegree.match(/(?:in|of)\s+([A-Za-z\s&(),-]+)/i);
+      area = fieldMatch ? fieldMatch[1].trim() : fullDegree;
+    }
+
+    // Extract location: look for patterns like "City, Country" or "City, State"
+    // Location comes after degree
+    let location = "";
+    if (degreeMatch) {
+      const afterDegree = afterDateText.substring(degreeMatch[0].length);
+      // Match: spaces + City + comma + spaces + Country/State (1-2 words max)
+      const locationMatch = afterDegree.match(
+        /\s+([A-Z][a-z]+),\s*([A-Z][A-Za-z]{1,5}(?:\s+[A-Z][A-Za-z]{1,5})?)(?:\s|$)/
+      );
+      if (locationMatch) {
+        location = `${locationMatch[1]}, ${locationMatch[2]}`;
       }
     }
 
-    education.push({
-      institution: entry.institution,
-      studyType: studyType,
-      area: area || "Education",
-      startDate: "",
-      endDate: entry.year,
-      location: entry.location,
-    });
-  }
-
-  return education;
-}
-
-    if (degree.toLowerCase().includes("master")) {
-      studyType = "Master's";
-      area = degree.replace(/master'?s?\s*(?:in|of)?\s*/i, "").trim();
-    } else if (degree.toLowerCase().includes("bachelor")) {
-      studyType = "Bachelor's";
-      area = degree.replace(/bachelor'?s?\s*(?:in|of)?\s*/i, "").trim();
+    // Only add if we found at least institution and dates
+    // AND: We must have found a degree (studyType should not be the default "Degree" unless we specifically set it)
+    // This filters out entries that are jobs, not education
+    const isDegreeType =
+      studyType === "Master's" ||
+      studyType === "Bachelor's" ||
+      studyType === "PhD";
+    if (institution && current.startDate && current.endDate && isDegreeType) {
+      education.push({
+        institution: institution,
+        studyType: studyType,
+        area: area || institution,
+        startDate: current.startDate,
+        endDate: current.endDate,
+        location: location,
+      });
     }
-
-    education.push({
-      institution: institution,
-      studyType: studyType,
-      area: area,
-      startDate: dateInfo.startDate,
-      endDate: dateInfo.endDate,
-      location: location,
-    });
   }
 
   return education;
@@ -715,12 +870,12 @@ function parseSkills(text) {
     if (colonIndex > 0) {
       const name = line.substring(0, colonIndex).trim();
       const keywordsStr = line.substring(colonIndex + 1).trim();
-      
+
       // Split keywords while preserving content in parentheses
       const keywords = [];
       let current = "";
       let parenDepth = 0;
-      
+
       for (let i = 0; i < keywordsStr.length; i++) {
         const char = keywordsStr[i];
         if (char === "(") {
@@ -729,7 +884,10 @@ function parseSkills(text) {
         } else if (char === ")") {
           parenDepth--;
           current += char;
-        } else if ((char === "," || char === ";" || char === "•" || char === "|") && parenDepth === 0) {
+        } else if (
+          (char === "," || char === ";" || char === "•" || char === "|") &&
+          parenDepth === 0
+        ) {
           // This is a separator and we're not inside parentheses
           if (current.trim().length > 0) {
             keywords.push(current.trim());
@@ -739,7 +897,7 @@ function parseSkills(text) {
           current += char;
         }
       }
-      
+
       // Add the last keyword
       if (current.trim().length > 0) {
         keywords.push(current.trim());

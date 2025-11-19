@@ -24,7 +24,7 @@
       }, 10000);
 
       // Try to listen for event
-      const handleReady = function() {
+      const handleReady = function () {
         clearTimeout(timeout);
         window.removeEventListener("pdfjs-ready", handleReady);
         // Give module a moment to fully set window.pdfjsLib
@@ -39,7 +39,7 @@
   }
 
   // Initialize after a brief delay to ensure DOM is ready
-  const initPDFExtractor = async function() {
+  const initPDFExtractor = async function () {
     try {
       await ensurePdfjsReady();
 
@@ -54,7 +54,9 @@
             );
           }
 
-          const loadingTask = window.pdfjsLib.getDocument({ data: arrayBuffer });
+          const loadingTask = window.pdfjsLib.getDocument({
+            data: arrayBuffer,
+          });
           const pdf = await loadingTask.promise;
 
           let fullText = "";
@@ -108,7 +110,10 @@
 
       console.log("[PDFTextExtractor] ✅ Initialized successfully");
     } catch (error) {
-      console.error("[PDFTextExtractor] ❌ Initialization failed:", error.message);
+      console.error(
+        "[PDFTextExtractor] ❌ Initialization failed:",
+        error.message
+      );
       window.PDFTextExtractorError = error;
     }
   };
@@ -118,8 +123,8 @@
     initPDFExtractor();
   } else {
     // Otherwise wait for DOM to be ready and then initialize
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initPDFExtractor);
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initPDFExtractor);
     } else {
       // DOM already ready
       setTimeout(initPDFExtractor, 10);

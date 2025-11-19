@@ -777,9 +777,11 @@ function parseEducation(text) {
     // Look for degree pattern - extract "Degree in Field" but stop before next institution
     // Handle both: "Master's in Computer Science" and "Master of Science in Computer Science"
     console.log(
-      `[Entry ${i + 1}] afterDateText (${afterDateText.length}): "${afterDateText.substring(0, 150).replace(/\n/g, "\\n")}"`
+      `[Entry ${i + 1}] afterDateText (${
+        afterDateText.length
+      }): "${afterDateText.substring(0, 150).replace(/\n/g, "\\n")}"`
     );
-    
+
     let degreeMatch = afterDateText.match(
       /[\s\n]*((?:Master|Bachelor|PhD|Doctorate)'?s?\s+(?:in|of)\s+[A-Za-z\s]+?)(?=\s+[A-Z][a-z]+,|\s+(?:University|College|Institute|School|Academy)|\s|$)/i
     );

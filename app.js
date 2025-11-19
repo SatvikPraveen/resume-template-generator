@@ -448,31 +448,31 @@ function identifySections(text) {
   const sectionPatterns = [
     {
       sectionName: "education",
-      pattern: /\b(?:E\s*D\s*U\s*C\s*A\s*T\s*I\s*O\s*N|EDUCATION|ACADEMIC)\b/gi,
+      pattern: /(?:^|\n)\s*(?:E\s*D\s*U\s*C\s*A\s*T\s*I\s*O\s*N|EDUCATION|ACADEMIC)\s*(?:\n|$)/gi,
     },
     {
       sectionName: "experience",
       pattern:
-        /\b(?:E\s*X\s*P\s*E\s*R\s*I\s*E\s*N\s*C\s*E|EXPERIENCE|PROFESSIONAL\s+EXPERIENCE|WORK\s+EXPERIENCE)\b/gi,
+        /(?:^|\n)\s*(?:E\s*X\s*P\s*E\s*R\s*I\s*E\s*N\s*C\s*E|EXPERIENCE|PROFESSIONAL\s+EXPERIENCE|WORK\s+EXPERIENCE)\s*(?:\n|$)/gi,
     },
     {
       sectionName: "projects",
-      pattern: /\b(?:P\s*R\s*O\s*J\s*E\s*C\s*T\s*S|PROJECTS|PORTFOLIO)\b/gi,
+      pattern: /(?:^|\n)\s*(?:P\s*R\s*O\s*J\s*E\s*C\s*T\s*S|PROJECTS|PORTFOLIO)\s*(?:\n|$)/gi,
     },
     {
       sectionName: "skills",
       pattern:
-        /\b(?:T\s*E\s*C\s*H\s*N\s*I\s*C\s*A\s*L\s+S\s*K\s*I\s*L\s*L\s*S|TECHNICAL\s+SKILLS|SKILLS)\b/gi,
+        /(?:^|\n)\s*(?:T\s*E\s*C\s*H\s*N\s*I\s*C\s*A\s*L\s+S\s*K\s*I\s*L\s*L\s*S|TECHNICAL\s+SKILLS|SKILLS)\s*(?:\n|$)/gi,
     },
     {
       sectionName: "summary",
-      pattern: /\b(?:PROFESSIONAL\s+SUMMARY|SUMMARY)\b/gi,
+      pattern: /(?:^|\n)\s*(?:PROFESSIONAL\s+SUMMARY|SUMMARY)\s*(?:\n|$)/gi,
     },
     {
       sectionName: "certifications",
-      pattern: /\b(?:CERTIFICATIONS|LICENSES)\b/gi,
+      pattern: /(?:^|\n)\s*(?:CERTIFICATIONS|LICENSES)\s*(?:\n|$)/gi,
     },
-    { sectionName: "languages", pattern: /\bLANGUAGES\b/gi },
+    { sectionName: "languages", pattern: /(?:^|\n)\s*LANGUAGES\s*(?:\n|$)/gi },
   ];
 
   const headerMatches = [];
@@ -521,14 +521,14 @@ function identifySections(text) {
     const next = uniqueMatches[i + 1];
     const startIdx = current.index + current.length;
     const endIdx = next ? next.index : text.length;
-    const headerText = text.substring(current.index, Math.min(current.index + 30, text.length)).replace(/\n/g, " ");
+    const headerText = text
+      .substring(current.index, Math.min(current.index + 30, text.length))
+      .replace(/\n/g, " ");
     console.log(
       `[Section: ${current.sectionName}] Header: "${headerText}..." at index ${current.index}`
     );
     console.log(
-      `  Content from ${startIdx} to ${endIdx} (${
-        endIdx - startIdx
-      } chars)`
+      `  Content from ${startIdx} to ${endIdx} (${endIdx - startIdx} chars)`
     );
   }
 

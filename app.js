@@ -211,7 +211,10 @@ function handleDrop(e) {
 
 // ==================== PDF PARSING ====================
 async function handleParsePDF() {
+  console.log("[PDF Parsing] Starting...");
+  
   if (!STATE.pdfArrayBuffer) {
+    console.error("[PDF Parsing] No PDF buffer available");
     alert("Please select a PDF file first.");
     return;
   }
@@ -219,28 +222,48 @@ async function handleParsePDF() {
   showLoading(true);
 
   try {
-    // Use the PDFTextExtractor module (wrapper around pdf.js)
+    // Check if PDFTextExtractor is available
+    console.log("[PDF Parsing] Checking PDFTextExtractor...");
+    console.log("[PDF Parsing] window.PDFTextExtractor =", typeof window.PDFTextExtractor);
+    console.log("[PDF Parsing] window.pdfjsLib =", typeof window.pdfjsLib);
+    
     if (!window.PDFTextExtractor || !PDFTextExtractor.extractText) {
-      throw new Error("PDFTextExtractor module not available");
+      throw new Error("PDFTextExtractor module not available. window.PDFTextExtractor=" + typeof window.PDFTextExtractor);
     }
 
+    console.log("[PDF Parsing] Extracting text from PDF...");
     const extracted = await PDFTextExtractor.extractText(STATE.pdfArrayBuffer);
     STATE.rawText = extracted || "";
+    console.log("[PDF Parsing] Text extracted. Length:", STATE.rawText.length);
 
     // Parse text into structured data
+    console.log("[PDF Parsing] Parsing resume text...");
     STATE.resumeData = parseResumeText(STATE.rawText);
+    console.log("[PDF Parsing] Resume data parsed:");
+    console.log("[PDF Parsing]   - Work entries:", STATE.resumeData.work.length);
+    console.log("[PDF Parsing]   - Education entries:", STATE.resumeData.education.length);
+    console.log("[PDF Parsing]   - Skills:", STATE.resumeData.skills.length);
 
     // Update UI
+    console.log("[PDF Parsing] Updating UI...");
     updateDataSection();
     enableTemplates();
 
     showLoading(false);
+    console.log("[PDF Parsing] ✅ Complete!");
 
     // Auto-select first template
-    document.querySelector('.template-card[data-template="classic"]').click();
+    console.log("[PDF Parsing] Clicking classic template...");
+    const classicBtn = document.querySelector('.template-card[data-template="classic"]');
+    if (classicBtn) {
+      classicBtn.click();
+    } else {
+      console.warn("[PDF Parsing] Classic template button not found");
+    }
   } catch (error) {
-    console.error("Error parsing PDF:", error);
-    alert("Failed to parse PDF. Please try another file.");
+    console.error("[PDF Parsing] ❌ ERROR:", error);
+    console.error("[PDF Parsing] Stack:", error.stack);
+    alert("Failed to parse PDF:\n\n" + error.message);
     showLoading(false);
   }
 }

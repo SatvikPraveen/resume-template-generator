@@ -323,6 +323,9 @@
       // Import pdf.mjs which sets up globalThis.pdfjsLib
       import * as pdfModule from "./vendor/pdf.mjs";
 
+      // Explicitly attach pdfjsLib to window so non-module scripts can access it
+      window.pdfjsLib = pdfModule;
+
       // Configure the worker to use local file
       if (window.pdfjsLib && window.pdfjsLib.GlobalWorkerOptions) {
         window.pdfjsLib.GlobalWorkerOptions.workerSrc =

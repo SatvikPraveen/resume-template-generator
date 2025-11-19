@@ -74,37 +74,53 @@ const SAMPLE_DATA = {
 
 // ==================== INITIALIZATION ====================
 document.addEventListener("DOMContentLoaded", function () {
+  console.log("[Init] DOMContentLoaded fired");
   initializeEventListeners();
   renderSamplePreview();
+  console.log("[Init] ✅ Initialization complete");
 });
 
 function initializeEventListeners() {
+  console.log("[Init] Starting event listener setup...");
+  
   // File upload
   const pdfInput = document.getElementById("pdfInput");
   const uploadBox = document.getElementById("uploadBox");
   const parseBtn = document.getElementById("parseBtn");
   const removeFile = document.getElementById("removeFile");
 
+  if (!pdfInput) console.error("[Init] pdfInput not found!");
+  if (!uploadBox) console.error("[Init] uploadBox not found!");
+  if (!parseBtn) console.error("[Init] parseBtn not found!");
+  if (!removeFile) console.error("[Init] removeFile not found!");
+
   pdfInput.addEventListener("change", handleFileSelect);
+  console.log("[Init] ✅ File input change listener attached");
+  
   parseBtn.addEventListener("click", handleParsePDF);
+  console.log("[Init] ✅ Parse button click listener attached");
+  
   removeFile.addEventListener("click", handleRemoveFile);
 
   // Drag and drop
   uploadBox.addEventListener("dragover", handleDragOver);
   uploadBox.addEventListener("dragleave", handleDragLeave);
   uploadBox.addEventListener("drop", handleDrop);
+  console.log("[Init] ✅ Drag and drop listeners attached");
 
   // Tabs
   const tabBtns = document.querySelectorAll(".tab-btn");
   tabBtns.forEach((btn) => {
     btn.addEventListener("click", handleTabSwitch);
   });
+  console.log("[Init] ✅ Tab listeners attached");
 
   // Template cards
   const templateCards = document.querySelectorAll(".template-card");
   templateCards.forEach((card) => {
     card.addEventListener("click", handleTemplateSelect);
   });
+  console.log("[Init] ✅ Template card listeners attached");
 
   // Export buttons
   document.getElementById("exportBtn").addEventListener("click", handleExport);
@@ -131,29 +147,50 @@ function renderSamplePreview() {
 
 // ==================== FILE HANDLING ====================
 function handleFileSelect(e) {
+  console.log("[File Upload] File select triggered");
+  console.log("[File Upload] event.target.files:", e.target.files);
+  
   const file = e.target.files[0];
-  if (!file) return;
+  if (!file) {
+    console.warn("[File Upload] No file selected");
+    return;
+  }
+
+  console.log("[File Upload] File selected:", file.name, "Size:", file.size, "Type:", file.type);
 
   if (!file.type.includes("pdf")) {
+    console.error("[File Upload] Not a PDF file, type is:", file.type);
     alert("Please upload a PDF file.");
     return;
   }
 
   if (file.size > 10 * 1024 * 1024) {
+    console.error("[File Upload] File too large:", file.size);
     alert("File size exceeds 10MB. Please upload a smaller file.");
     return;
   }
 
   STATE.pdfFile = file;
+  console.log("[File Upload] File saved to STATE");
 
   // Read file as ArrayBuffer
   const reader = new FileReader();
+  
   reader.onload = function (event) {
+    console.log("[File Upload] FileReader onload - buffer size:", event.target.result.byteLength);
     STATE.pdfArrayBuffer = event.target.result;
     showFileInfo(file.name);
     document.getElementById("parseBtn").disabled = false;
+    console.log("[File Upload] ✅ File ready to parse");
   };
+
+  reader.onerror = function (error) {
+    console.error("[File Upload] FileReader error:", error);
+    alert("Failed to read file: " + error);
+  };
+
   reader.readAsArrayBuffer(file);
+  console.log("[File Upload] Started reading file as ArrayBuffer");
 }
 
 function handleRemoveFile() {

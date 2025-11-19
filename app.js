@@ -708,7 +708,7 @@ function parseEducation(text) {
 
   console.log(`[parseEducation] Found ${dateMatches.length} date ranges`);
   dateMatches.forEach((dm, i) => {
-    console.log(`  Date ${i+1}: "${dm.fullMatch}" at index ${dm.index}`);
+    console.log(`  Date ${i + 1}: "${dm.fullMatch}" at index ${dm.index}`);
   });
 
   // Process each date range found
@@ -860,13 +860,19 @@ function parseEducation(text) {
         endDate: current.endDate,
         location: location,
       });
-      console.log(`[parseEducation] Added entry: ${institution} (${studyType})`);
+      console.log(
+        `[parseEducation] Added entry: ${institution} (${studyType})`
+      );
     } else {
-      console.log(`[parseEducation] SKIPPED entry - institution:${!!institution}, startDate:${!!current.startDate}, endDate:${!!current.endDate}, isDegreeType:${isDegreeType}, studyType:${studyType}`);
+      console.log(
+        `[parseEducation] SKIPPED entry - institution:${!!institution}, startDate:${!!current.startDate}, endDate:${!!current.endDate}, isDegreeType:${isDegreeType}, studyType:${studyType}`
+      );
     }
   }
 
-  console.log(`[parseEducation] Returning ${education.length} education entries`);
+  console.log(
+    `[parseEducation] Returning ${education.length} education entries`
+  );
 
   return education;
 }

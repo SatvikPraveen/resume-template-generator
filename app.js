@@ -387,12 +387,15 @@ function identifySections(text) {
   }
 
   headerMatches.sort((a, b) => a.index - b.index);
-  console.log("Headers found:", headerMatches.map(h => `${h.sectionName}@${h.index}`));
+  console.log(
+    "Headers found:",
+    headerMatches.map((h) => `${h.sectionName}@${h.index}`)
+  );
 
   // Remove duplicates - keep first occurrence of each section
   const uniqueMatches = [];
   const seenSections = new Set();
-  
+
   for (const match of headerMatches) {
     if (!seenSections.has(match.sectionName)) {
       uniqueMatches.push(match);
@@ -424,15 +427,10 @@ function parseWorkExperience(text) {
 
   const jobs = [];
 
-  // Strategy: Find date patterns to identify where each job ends
-  // Each job has format:
-  // - Position Title (optional: Client/Project names)
-  // - Company Name (optional: Role type)
-  // - Start Date - End Date (or Present)
-  // - Location
-  // - Description with bullet points
+  // Split by double line breaks or by date pattern to find individual jobs
+  // Format: Position (Company) Date - Date followed by description
 
-  // Find all date patterns like "June 2020 - Aug 2023" or "Sep. 2023 - Present"
+  // Find jobs by looking for date patterns: "Month Year - Month Year" or "Month Year - Present"
   const datePattern =
     /([A-Z][a-z]+\.?\s+\d{4})\s*[-–—]\s*((?:[A-Z][a-z]+\.?\s+\d{4})|Present)/g;
 
@@ -440,60 +438,54 @@ function parseWorkExperience(text) {
   let match;
   while ((match = datePattern.exec(text)) !== null) {
     dateMatches.push({
+      fullDate: match[0],
       startDate: match[1],
       endDate: match[2],
       index: match.index,
-      length: match[0].length,
+      endIndex: match.index + match[0].length,
     });
   }
 
   if (dateMatches.length === 0) return [];
 
-  // Process each date range
+  // Extract job info for each date
   for (let i = 0; i < dateMatches.length; i++) {
     const dateInfo = dateMatches[i];
     const nextDateInfo = dateMatches[i + 1];
 
-    // Job details are BEFORE the date
-    let headerStart =
-      i === 0 ? 0 : dateMatches[i - 1].index + dateMatches[i - 1].length;
-    let headerEnd = dateInfo.index;
-    let header = text.substring(headerStart, headerEnd).trim();
+    // Get text BEFORE the date (position and company)
+    const headerStart = i === 0 ? 0 : dateMatches[i - 1].endIndex;
+    const headerEnd = dateInfo.index;
+    const header = text.substring(headerStart, headerEnd).trim();
 
-    // Description is AFTER the date
-    let descStart = dateInfo.index + dateInfo.length;
-    let descEnd = nextDateInfo ? nextDateInfo.index : text.length;
-    let description = text.substring(descStart, descEnd).trim();
+    // Get text AFTER the date (description)
+    const descStart = dateInfo.endIndex;
+    const descEnd = nextDateInfo ? nextDateInfo.index : text.length;
+    const description = text.substring(descStart, descEnd).trim();
 
-    // Remove location line (e.g., "Chennai, India")
-    description = description
-      .replace(
-        /\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*),\s*([A-Z]{2}|[A-Z][a-z]+)\b\s*/g,
-        ""
-      )
-      .trim();
+    // Parse header for position and company
+    // Typically: "Position Title (Company Name)" or just "Position Title"
+    // Or: "Position\nCompany"
+    let position = "";
+    let company = "";
 
-    // Parse header: Usually has position, company, role info
-    // Split by multiple spaces or newlines
-    const headerLines = header
-      .split(/[\n•]+/)
-      .map((s) => s.trim())
-      .filter((s) => s.length > 0);
-
-    // Assume first line is position (may include clients in parens)
-    // Second line is company (may include role type in parens)
-    let position = headerLines[0] || "";
-    let company = headerLines[1] || "";
-
-    // If we only have one line, split by the parenthesis pattern
-    if (headerLines.length === 1 && header.includes("(")) {
-      // Contains parenthetical info, try to split more intelligently
-      const allText = header;
-      const positionMatch = allText.match(/^([^(]+?)\s*\([^)]*\)/);
-      if (positionMatch) {
-        position = positionMatch[1].trim();
-        company = allText.replace(position, "").trim();
+    if (header.includes("(")) {
+      // Format: "Position (Company)"
+      const match = header.match(/^([^(]+?)\s*\(([^)]+)\)/);
+      if (match) {
+        position = match[1].trim();
+        company = match[2].trim();
+      } else {
+        position = header;
       }
+    } else {
+      // Try to split by newline or use first line as position
+      const lines = header
+        .split(/[\n•]+/)
+        .map((l) => l.trim())
+        .filter((l) => l.length > 0);
+      position = lines[0] || "";
+      company = lines[1] || "";
     }
 
     jobs.push({
@@ -512,49 +504,94 @@ function parseEducation(text) {
   if (!text) return [];
 
   const education = [];
-  const blocks = text.split(/\n\s*\n/).filter((b) => b.trim().length > 0);
 
-  for (const block of blocks) {
-    const lines = block
-      .split("\n")
+  // Split by date patterns to find individual education entries
+  // Format: Institution Name, Degree, Date - Date, Location
+
+  const datePattern =
+    /([A-Z][a-z]+\.?\s+\d{4})\s*[-–—]\s*((?:[A-Z][a-z]+\.?\s+\d{4})|Present)/g;
+
+  const dateMatches = [];
+  let match;
+  while ((match = datePattern.exec(text)) !== null) {
+    dateMatches.push({
+      fullDate: match[0],
+      startDate: match[1],
+      endDate: match[2],
+      index: match.index,
+      endIndex: match.index + match[0].length,
+    });
+  }
+
+  // If no dates found, try splitting by blocks (institution entries)
+  if (dateMatches.length === 0) {
+    const blocks = text.split(/\n\s*\n/).filter((b) => b.trim().length > 0);
+    for (const block of blocks) {
+      const lines = block
+        .split("\n")
+        .map((l) => l.trim())
+        .filter((l) => l.length > 0);
+      if (lines.length === 0) continue;
+
+      education.push({
+        institution: lines[0] || "",
+        studyType: "Degree",
+        area: lines[1] || "",
+        startDate: "",
+        endDate: "",
+        location: "",
+      });
+    }
+    return education;
+  }
+
+  // Extract education for each date
+  for (let i = 0; i < dateMatches.length; i++) {
+    const dateInfo = dateMatches[i];
+    const nextDateInfo = dateMatches[i + 1];
+
+    // Get text BEFORE the date (institution and degree)
+    const headerStart = i === 0 ? 0 : dateMatches[i - 1].endIndex;
+    const headerEnd = dateInfo.index;
+    const header = text.substring(headerStart, headerEnd).trim();
+
+    // Get text AFTER the date (location and other info)
+    const afterStart = dateInfo.endIndex;
+    const afterEnd = nextDateInfo ? nextDateInfo.index : text.length;
+    const afterText = text.substring(afterStart, afterEnd).trim();
+
+    // Parse header
+    const headerLines = header
+      .split(/[\n•]+/)
       .map((l) => l.trim())
       .filter((l) => l.length > 0);
-    if (lines.length === 0) continue;
+    const institution = headerLines[0] || "";
+    const degree = headerLines[1] || "";
 
-    const institution = lines[0] || "";
-    const degree = lines[1] || "";
+    // Extract location from after text
+    const locationMatch = afterText.match(
+      /([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*),\s*([A-Z]{2,})/
+    );
+    const location = locationMatch ? locationMatch[0] : "";
 
-    // Look for dates
-    const dateRegex = /(\w+\.?\s+\d{4})\s*[-–—]\s*(\w+\.?\s+\d{4}|Present)/i;
-    const dateMatch = block.match(dateRegex);
-    const startDate = dateMatch ? dateMatch[1] : "";
-    const endDate = dateMatch ? dateMatch[2] : "";
-
-    // Try to extract degree type and area
+    // Determine study type and area from degree text
     let studyType = "Degree";
-    let area = "";
+    let area = degree;
 
     if (degree.toLowerCase().includes("master")) {
       studyType = "Master's";
-      area = degree.replace(/master'?s?\s*(in|of)?/i, "").trim();
+      area = degree.replace(/master'?s?\s*(?:in|of)?\s*/i, "").trim();
     } else if (degree.toLowerCase().includes("bachelor")) {
       studyType = "Bachelor's";
-      area = degree.replace(/bachelor'?s?\s*(in|of)?/i, "").trim();
-    } else {
-      area = degree;
+      area = degree.replace(/bachelor'?s?\s*(?:in|of)?\s*/i, "").trim();
     }
-
-    // Try to find location
-    const locationRegex = /([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*),\s*([A-Z]{2,})/;
-    const locationMatch = block.match(locationRegex);
-    const location = locationMatch ? locationMatch[0] : "";
 
     education.push({
       institution: institution,
       studyType: studyType,
       area: area,
-      startDate: startDate,
-      endDate: endDate,
+      startDate: dateInfo.startDate,
+      endDate: dateInfo.endDate,
       location: location,
     });
   }

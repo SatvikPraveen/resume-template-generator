@@ -411,7 +411,10 @@ function parseResumeText(text) {
 
   console.log("parseResumeText - Final resumeData:", resumeData);
 
-  return resumeData;
+  // Clean up common formatting issues
+  const cleanedData = cleanupResumeData(resumeData);
+
+  return cleanedData;
 }
 
 function extractEmail(text) {
@@ -1027,6 +1030,72 @@ function parseProjects(text) {
   }
 
   return projects;
+}
+
+// ==================== DATA CLEANUP ====================
+function cleanupResumeData(resumeData) {
+  // Clean common formatting issues from extracted data
+  const cleaned = JSON.parse(JSON.stringify(resumeData)); // Deep copy
+
+  // Fix common company name issues
+  const companyFixes = {
+    "Service - now": "ServiceNow",
+    "service - now": "ServiceNow",
+    "Service -": "Service",
+  };
+
+  // Apply company fixes
+  if (cleaned.work && Array.isArray(cleaned.work)) {
+    cleaned.work.forEach((job) => {
+      for (const [bad, good] of Object.entries(companyFixes)) {
+        if (job.company && job.company.includes(bad)) {
+          job.company = job.company.replace(bad, good);
+        }
+      }
+      // Remove extra spaces
+      if (job.company) job.company = job.company.replace(/\s+/g, " ").trim();
+      if (job.position) job.position = job.position.replace(/\s+/g, " ").trim();
+    });
+  }
+
+  // Clean education data
+  if (cleaned.education && Array.isArray(cleaned.education)) {
+    cleaned.education.forEach((edu) => {
+      if (edu.institution)
+        edu.institution = edu.institution.replace(/\s+/g, " ").trim();
+      if (edu.area) edu.area = edu.area.replace(/\s+/g, " ").trim();
+      if (edu.location) edu.location = edu.location.replace(/\s+/g, " ").trim();
+    });
+  }
+
+  // Clean projects
+  if (cleaned.projects && Array.isArray(cleaned.projects)) {
+    cleaned.projects.forEach((project) => {
+      if (project.name) project.name = project.name.replace(/\s+/g, " ").trim();
+      if (project.summary)
+        project.summary = project.summary.replace(/\s+/g, " ").trim();
+      if (project.keywords && Array.isArray(project.keywords)) {
+        project.keywords = project.keywords.map((k) =>
+          k.replace(/\s+/g, " ").trim()
+        );
+      }
+    });
+  }
+
+  // Clean skills
+  if (cleaned.skills && Array.isArray(cleaned.skills)) {
+    cleaned.skills.forEach((skillGroup) => {
+      if (skillGroup.name)
+        skillGroup.name = skillGroup.name.replace(/\s+/g, " ").trim();
+      if (skillGroup.keywords && Array.isArray(skillGroup.keywords)) {
+        skillGroup.keywords = skillGroup.keywords.map((k) =>
+          k.replace(/\s+/g, " ").trim()
+        );
+      }
+    });
+  }
+
+  return cleaned;
 }
 
 // ==================== UI UPDATES ====================

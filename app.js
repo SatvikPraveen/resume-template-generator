@@ -776,10 +776,17 @@ function parseEducation(text) {
 
     // Look for degree pattern - extract "Degree in Field" but stop before next institution
     // Handle both: "Master's in Computer Science" and "Master of Science in Computer Science"
+    const rawAfterDateText = JSON.stringify(afterDateText);
     console.log(
       `[Entry ${i + 1}] afterDateText (${
         afterDateText.length
       }): "${afterDateText.substring(0, 150).replace(/\n/g, "\\n")}"`
+    );
+    console.log(
+      `[Entry ${i + 1}] afterDateText (JSON): ${rawAfterDateText.substring(
+        0,
+        200
+      )}`
     );
 
     // SIMPLIFIED: Just grab "Degree in Field" - stop at location, newline, or institution
@@ -787,12 +794,10 @@ function parseEducation(text) {
       /[\s\n]+((?:Master|Bachelor|PhD|Doctorate)'?s?)\s+(?:in|of)\s+([A-Za-z\s&(),-]+?)(?=\s+[A-Z][a-z]*,|\s+(?:University|College|Institute|School|Academy)|\n|$)/i
     );
     console.log(
-      `[Entry ${i + 1}] Pattern 1 (Master/Bachelor + in/of + field): ${degreeMatch ? "YES" : "NO"}`
+      `[Entry ${i + 1}] Pattern 1: ${degreeMatch ? "✓ MATCH" : "✗ NO"} ${
+        degreeMatch ? `→ "${degreeMatch[1]}" | "${degreeMatch[2]}"` : ""
+      }`
     );
-    
-    if (degreeMatch) {
-      console.log(`[Entry ${i + 1}]   Degree type: "${degreeMatch[1]}", Field: "${degreeMatch[2]}"`);
-    }
 
     // If first pattern didn't match, try more lenient version with optional "in/of"
     if (!degreeMatch) {
@@ -800,11 +805,10 @@ function parseEducation(text) {
         /[\s\n]+((?:Master|Bachelor|PhD|Doctorate)'?s?)\s+(?:in|of)?\s+([A-Za-z\s&(),-]+?)(?=\s+[A-Z][a-z]*,|\s+(?:University|College|Institute|School|Academy)|\n|$)/i
       );
       console.log(
-        `[Entry ${i + 1}] Pattern 2 (optional in/of): ${degreeMatch ? "YES" : "NO"}`
+        `[Entry ${i + 1}] Pattern 2: ${degreeMatch ? "✓ MATCH" : "✗ NO"} ${
+          degreeMatch ? `→ "${degreeMatch[1]}" | "${degreeMatch[2]}"` : ""
+        }`
       );
-      if (degreeMatch) {
-        console.log(`[Entry ${i + 1}]   Degree type: "${degreeMatch[1]}", Field: "${degreeMatch[2]}"`);
-      }
     }
 
     // If STILL no match, grab just the degree keyword
@@ -813,11 +817,22 @@ function parseEducation(text) {
         /[\s\n]+(Master|Bachelor|PhD|Doctorate)'?s?\s+([A-Za-z\s&(),-]+?)(?=\s+[A-Z][a-z]*,|\n|$)/i
       );
       console.log(
-        `[Entry ${i + 1}] Pattern 3 (any degree + text): ${degreeMatch ? "YES" : "NO"}`
+        `[Entry ${i + 1}] Pattern 3: ${degreeMatch ? "✓ MATCH" : "✗ NO"} ${
+          degreeMatch ? `→ "${degreeMatch[1]}" | "${degreeMatch[2]}"` : ""
+        }`
       );
-      if (degreeMatch) {
-        console.log(`[Entry ${i + 1}]   Degree type: "${degreeMatch[1]}", Field: "${degreeMatch[2]}"`);
-      }
+    }
+
+    // If STILL no match, try without ANY lookahead - just look for degree keywords
+    if (!degreeMatch) {
+      degreeMatch = afterDateText.match(
+        /(Master|Bachelor|PhD|Doctorate)'?s?\s+(?:of\s+)?(?:in\s+)?([A-Za-z\s&(),-]+)/i
+      );
+      console.log(
+        `[Entry ${i + 1}] Pattern 4 (fallback): ${
+          degreeMatch ? "✓ MATCH" : "✗ NO"
+        } ${degreeMatch ? `→ "${degreeMatch[1]}" | "${degreeMatch[2]}"` : ""}`
+      );
     }
 
     if (degreeMatch) {
@@ -826,7 +841,11 @@ function parseEducation(text) {
       const degreeType = degreeMatch[1].trim();
       const fieldOfStudy = degreeMatch[2] ? degreeMatch[2].trim() : "";
 
-      console.log(`[Entry ${i + 1}] Matched: degreeType="${degreeType}", field="${fieldOfStudy}"`);
+      console.log(
+        `[Entry ${
+          i + 1
+        }] Matched: degreeType="${degreeType}", field="${fieldOfStudy}"`
+      );
 
       // Extract study type
       if (/master/i.test(degreeType)) {

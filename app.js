@@ -815,29 +815,18 @@ function parseEducation(text) {
           idx + degreeInfo.keyword.length
         );
 
-        // First, try to get field with "in" or "of"
+        // First, try to get field with "in" or "of" - stop at comma which indicates location
         let fieldMatch = afterKeyword.match(
-          /\s*(?:in|of)\s+([A-Za-z\s&(),-]+?)(?=,|\n|$)/i
+          /\s*(?:in|of)\s+([A-Za-z\s&(),-]+?)(?=\s+[A-Z][a-z]+,|,|\n|$)/i
         );
         if (fieldMatch && fieldMatch[1]) {
           fieldOfStudy = fieldMatch[1].trim();
           console.log(`[Entry ${i + 1}] Found field: "${fieldOfStudy}"`);
-        } else {
-          // If no "in/of", just grab the next word(s) as field
-          fieldMatch = afterKeyword.match(
-            /\s+([A-Za-z][A-Za-z\s&(),-]*?)(?=,|\n|[A-Z]{2,}|$)/
-          );
-          if (fieldMatch && fieldMatch[1]) {
-            fieldOfStudy = fieldMatch[1].trim();
-            console.log(
-              `[Entry ${i + 1}] Found field (no in/of): "${fieldOfStudy}"`
-            );
-          }
         }
 
-        // Now try to extract location (City, Country)
+        // Extract location (City, Country) - look for comma-separated location pattern
         const locationMatch = afterKeyword.match(
-          /([A-Z][a-z]+),\s*([A-Z][A-Za-z]{1,10})/
+          /\s+([A-Z][a-z]+),\s*([A-Z][A-Za-z]{1,10})/
         );
         if (locationMatch) {
           location = `${locationMatch[1]}, ${locationMatch[2]}`;

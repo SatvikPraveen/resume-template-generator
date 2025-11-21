@@ -803,10 +803,25 @@ body {
 
 /* ==================== PRINT STYLES ==================== */
 @media print {
+  html,
+  body {
+    background: white !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
   .header,
   .footer,
   .section:not(.preview-section) {
     display: none !important;
+  }
+
+  .preview-section {
+    background: white !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    box-shadow: none !important;
   }
 
   .preview-section .section-header {
@@ -825,12 +840,19 @@ body {
     display: none !important;
   }
 
-  /* Remove shadows and decorations but keep colors and design */
+  /* Remove ALL borders, shadows and decorations */
   * {
     box-shadow: none !important;
+    border: none !important;
+  }
+
+  /* Preserve essential borders in resume content */
+  .resume-content * {
+    border: inherit !important;
   }
 
   @page {
     margin: 0.5in;
+    background: white;
   }
 }

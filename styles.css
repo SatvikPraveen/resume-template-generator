@@ -789,84 +789,30 @@ body {
 
 /* ==================== PRINT STYLES ==================== */
 @media print {
-  * {
-    box-shadow: none !important;
-    border-radius: 0 !important;
-  }
-
-  html, body {
-    width: 100% !important;
-    height: 100% !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    background: white !important;
-  }
-
-  body {
-    background: white !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    font-size: 12pt !important;
-    line-height: 1.5 !important;
-  }
-
   .header,
   .footer,
   .section:not(.preview-section) {
     display: none !important;
   }
 
-  .preview-section {
-    padding: 0 !important;
-    margin: 0 !important;
-    background: white !important;
-  }
-
   .resume-container {
-    background: white !important;
-    border-radius: 0 !important;
     box-shadow: none !important;
+    border: none !important;
     padding: 0 !important;
     margin: 0 !important;
-    min-height: unset !important;
-    max-width: 100% !important;
-    width: 100% !important;
-    border: none !important;
-  }
-
-  .resume-content {
     background: white !important;
-    color: black !important;
-    padding: 0.5in !important;
-    margin: 0 !important;
-    page-break-after: auto !important;
-    border: none !important;
-    box-shadow: none !important;
   }
 
-  /* Ensure resume content children are printable */
-  .resume-content * {
-    box-shadow: none !important;
-    border-radius: 0 !important;
-  }
-
-  /* Hide any UI elements */
-  .action-btns,
-  .empty-state,
-  .section-header,
-  .container,
-  .main-content {
+  .action-btns {
     display: none !important;
   }
 
-  /* Ensure text is visible and black */
-  body, .resume-content, .resume-content * {
-    color: #000 !important;
+  /* Remove shadows and decorations but keep colors and design */
+  * {
+    box-shadow: none !important;
   }
 
-  /* Page setup */
   @page {
     margin: 0.5in;
-    size: letter;
   }
 }

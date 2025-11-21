@@ -1651,12 +1651,11 @@ const TEMPLATES = {
         @media print {
           .resume-content.tech-terminal {
             background: white !important;
-            color: #000 !important;
-            padding: 0.5in !important;
-            min-height: unset !important;
+            padding: 0 !important;
+            margin: 0 !important;
           }
 
-          /* Hide terminal chrome - just show content */
+          /* Hide terminal decorative chrome */
           .ascii-header {
             display: none !important;
           }
@@ -1664,7 +1663,6 @@ const TEMPLATES = {
           .terminal-emulator {
             border: none !important;
             box-shadow: none !important;
-            animation: none !important;
             background: white !important;
             border-radius: 0 !important;
           }
@@ -1673,217 +1671,31 @@ const TEMPLATES = {
             display: none !important;
           }
 
-          .terminal-buttons,
-          .terminal-buttons span {
-            display: none !important;
-          }
-
-          .btn-close, .btn-minimize, .btn-maximize {
-            display: none !important;
-          }
-
           .terminal-content {
             background: white !important;
-            color: #000 !important;
-            max-height: none !important;
             padding: 0 !important;
+            max-height: none !important;
             overflow: visible !important;
-            font-size: 11pt !important;
           }
 
-          .terminal-line {
-            display: flex !important;
-            margin-bottom: 6pt !important;
-            page-break-inside: avoid !important;
-          }
-
-          .prompt {
-            display: none !important;
-          }
-
-          .command {
-            font-weight: bold !important;
-            color: #000 !important;
+          .prompt,
+          .command,
+          .blink {
             display: none !important;
           }
 
           .terminal-output {
-            margin-left: 0 !important;
+            margin: 0 !important;
             padding-left: 0 !important;
             border-left: none !important;
-            margin-bottom: 10pt !important;
           }
 
           .output-line {
-            color: #000 !important;
-            margin-bottom: 4pt !important;
-            display: block !important;
-            page-break-inside: avoid !important;
-          }
-
-          .output-line.highlight {
-            color: #000 !important;
-            font-weight: bold !important;
-            text-shadow: none !important;
-          }
-
-          .output-line.timeline-node {
-            color: #000 !important;
-            font-weight: bold !important;
-            margin-bottom: 8pt !important;
-          }
-
-          .timeline-marker {
-            margin-right: 8px !important;
-          }
-
-          .output-line.description {
-            color: #333 !important;
-            font-size: 10pt !important;
-            margin-left: 0 !important;
-          }
-
-          .output-line.summary-text {
-            color: #000 !important;
-            font-style: italic !important;
-            margin: 8pt 0 !important;
-          }
-
-          .output-line.edu-item {
-            color: #000 !important;
-            padding: 4pt 0 !important;
-          }
-
-          .output-block {
-            margin-bottom: 12pt !important;
-            padding-bottom: 8pt !important;
-            border-bottom: 1px solid #ddd !important;
-            page-break-inside: avoid !important;
-          }
-
-          .output-text {
-            color: #000 !important;
-            font-weight: bold !important;
-            text-shadow: none !important;
-          }
-
-          .label {
-            color: #000 !important;
-            font-weight: bold !important;
-            display: inline !important;
-          }
-
-          .value {
-            color: #000 !important;
-            display: inline !important;
-          }
-
-          .link {
-            color: #0066cc !important;
-            text-decoration: underline !important;
-          }
-
-          .muted {
-            color: #666 !important;
-            font-size: 9pt !important;
-          }
-
-          .file-icon {
-            margin-right: 4px !important;
-          }
-
-          .skill-category {
-            margin-bottom: 8pt !important;
-            padding: 6pt !important;
-            background: white !important;
-            border-left: 2pt solid #000 !important;
-            page-break-inside: avoid !important;
-          }
-
-          .skill-header {
-            color: #000 !important;
-            font-weight: bold !important;
-            text-shadow: none !important;
-            display: block !important;
             margin-bottom: 4pt !important;
           }
 
-          .skill-items {
-            display: flex !important;
-            flex-wrap: wrap !important;
-            gap: 6pt !important;
-          }
-
-          .skill-badge {
-            display: inline-block !important;
-            background: white !important;
-            border: 1pt solid #000 !important;
-            color: #000 !important;
-            padding: 2pt 6pt !important;
-            border-radius: 0 !important;
-            font-size: 10pt !important;
-          }
-
-          .skill-name {
-            color: #000 !important;
-            font-weight: bold !important;
-          }
-
-          .project-item {
-            background: white !important;
-            border-left: 2pt solid #000 !important;
-            padding: 8pt !important;
-            margin-bottom: 10pt !important;
-            page-break-inside: avoid !important;
-          }
-
-          .project-name {
-            color: #000 !important;
-            font-weight: bold !important;
-            font-size: 12pt !important;
-            text-shadow: none !important;
-            display: block !important;
-            margin-bottom: 4pt !important;
-          }
-
-          .project-icon {
-            display: none !important;
-          }
-
-          .project-desc {
-            color: #333 !important;
-            font-size: 10pt !important;
-            margin-left: 0 !important;
-            margin-top: 4pt !important;
-          }
-
-          .project-tech {
-            color: #000 !important;
-            font-size: 10pt !important;
-            margin-left: 0 !important;
-            margin-top: 4pt !important;
-            display: flex !important;
-            flex-wrap: wrap !important;
-            gap: 4pt !important;
-          }
-
-          .tech-label {
-            color: #000 !important;
-            font-weight: bold !important;
-          }
-
-          .tech-tag {
-            display: inline-block !important;
-            background: white !important;
-            border: 1pt solid #000 !important;
-            color: #000 !important;
-            padding: 2pt 4pt !important;
-            border-radius: 0 !important;
-            font-size: 9pt !important;
-          }
-
-          .blink {
-            display: none !important;
+          .terminal-line {
+            margin-bottom: 6pt !important;
           }
         }
       `;

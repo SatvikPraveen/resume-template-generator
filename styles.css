@@ -721,6 +721,20 @@ body {
   color: #333;
 }
 
+/* ==================== PREVIEW SECTION - CLEAN BORDERLESS ==================== */
+.preview-section {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  box-shadow: none !important;
+}
+
+.preview-section:hover {
+  box-shadow: none !important;
+}
+
 /* ==================== ACTION BUTTONS ==================== */
 .action-btns {
   display: flex;

@@ -272,10 +272,16 @@ const TEMPLATES = {
           <aside class="modern-sidebar">
             <div class="modern-header">
               <h1>${data.basics?.name || "Your Name"}</h1>
-              <p class="modern-title">${data.basics?.label || "Professional"}</p>
+              <p class="modern-title">${
+                data.basics?.label || "Professional"
+              }</p>
             </div>
 
-            ${data.basics?.summary ? `<p class="modern-bio">${data.basics.summary}</p>` : ""}
+            ${
+              data.basics?.summary
+                ? `<p class="modern-bio">${data.basics.summary}</p>`
+                : ""
+            }
 
             ${
               data.basics?.email || data.basics?.phone || data.basics?.location
@@ -283,9 +289,21 @@ const TEMPLATES = {
               <div class="modern-section">
                 <h3>Contact</h3>
                 <div class="modern-contact">
-                  ${data.basics?.email ? `<div class="contact-item"><span class="icon">✉</span>${data.basics.email}</div>` : ""}
-                  ${data.basics?.phone ? `<div class="contact-item"><span class="icon">☎</span>${data.basics.phone}</div>` : ""}
-                  ${data.basics?.location ? `<div class="contact-item"><span class="icon">📍</span>${data.basics.location}</div>` : ""}
+                  ${
+                    data.basics?.email
+                      ? `<div class="contact-item"><span class="icon">✉</span>${data.basics.email}</div>`
+                      : ""
+                  }
+                  ${
+                    data.basics?.phone
+                      ? `<div class="contact-item"><span class="icon">☎</span>${data.basics.phone}</div>`
+                      : ""
+                  }
+                  ${
+                    data.basics?.location
+                      ? `<div class="contact-item"><span class="icon">📍</span>${data.basics.location}</div>`
+                      : ""
+                  }
                 </div>
               </div>
             `
@@ -307,10 +325,7 @@ const TEMPLATES = {
                         ${
                           Array.isArray(skill.keywords)
                             ? skill.keywords
-                                .map(
-                                  (kw) =>
-                                    `<span class="badge">${kw}</span>`
-                                )
+                                .map((kw) => `<span class="badge">${kw}</span>`)
                                 .join("")
                             : ""
                         }
@@ -341,9 +356,16 @@ const TEMPLATES = {
                         <h3>${job.position || "Position"}</h3>
                         <p class="card-subtitle">${job.name || "Company"}</p>
                       </div>
-                      <span class="card-date">${formatDate(job.startDate, job.endDate)}</span>
+                      <span class="card-date">${formatDate(
+                        job.startDate,
+                        job.endDate
+                      )}</span>
                     </div>
-                    ${job.summary ? `<p class="card-description">${job.summary}</p>` : ""}
+                    ${
+                      job.summary
+                        ? `<p class="card-description">${job.summary}</p>`
+                        : ""
+                    }
                   </div>
                 `
                   )
@@ -364,10 +386,17 @@ const TEMPLATES = {
                   <div class="modern-card">
                     <div class="card-header">
                       <div>
-                        <h3>${edu.studyType || "Degree"} in ${edu.area || "Field"}</h3>
-                        <p class="card-subtitle">${edu.institution || "Institution"}</p>
+                        <h3>${edu.studyType || "Degree"} in ${
+                      edu.area || "Field"
+                    }</h3>
+                        <p class="card-subtitle">${
+                          edu.institution || "Institution"
+                        }</p>
                       </div>
-                      <span class="card-date">${formatDate(edu.startDate, edu.endDate)}</span>
+                      <span class="card-date">${formatDate(
+                        edu.startDate,
+                        edu.endDate
+                      )}</span>
                     </div>
                   </div>
                 `
@@ -615,8 +644,14 @@ const TEMPLATES = {
           <div class="creative-hero">
             <div class="hero-content">
               <h1 class="hero-name">${data.basics?.name || "Your Name"}</h1>
-              <p class="hero-title">${data.basics?.label || "Creative Professional"}</p>
-              ${data.basics?.summary ? `<p class="hero-bio">${data.basics.summary}</p>` : ""}
+              <p class="hero-title">${
+                data.basics?.label || "Creative Professional"
+              }</p>
+              ${
+                data.basics?.summary
+                  ? `<p class="hero-bio">${data.basics.summary}</p>`
+                  : ""
+              }
             </div>
           </div>
 
@@ -629,7 +664,9 @@ const TEMPLATES = {
                 .map(
                   (skill, idx) => `
                 <div class="stat-card">
-                  <div class="stat-number">${skill.keywords ? skill.keywords.length : 0}</div>
+                  <div class="stat-number">${
+                    skill.keywords ? skill.keywords.length : 0
+                  }</div>
                   <div class="stat-label">${skill.name}</div>
                 </div>
               `
@@ -653,8 +690,15 @@ const TEMPLATES = {
                     <div class="card-accent"></div>
                     <h3>${job.position || "Position"}</h3>
                     <p class="card-company">${job.name || "Company"}</p>
-                    <p class="card-date">${formatDate(job.startDate, job.endDate)}</p>
-                    ${job.summary ? `<p class="card-text">${job.summary}</p>` : ""}
+                    <p class="card-date">${formatDate(
+                      job.startDate,
+                      job.endDate
+                    )}</p>
+                    ${
+                      job.summary
+                        ? `<p class="card-text">${job.summary}</p>`
+                        : ""
+                    }
                   </div>
                 `
                   )
@@ -678,8 +722,13 @@ const TEMPLATES = {
                     <div class="card-accent-alt"></div>
                     <h3>${edu.studyType || "Degree"}</h3>
                     <p class="card-major">${edu.area || "Field"}</p>
-                    <p class="card-school">${edu.institution || "Institution"}</p>
-                    <p class="card-date">${formatDate(edu.startDate, edu.endDate)}</p>
+                    <p class="card-school">${
+                      edu.institution || "Institution"
+                    }</p>
+                    <p class="card-date">${formatDate(
+                      edu.startDate,
+                      edu.endDate
+                    )}</p>
                   </div>
                 `
                   )
@@ -699,11 +748,17 @@ const TEMPLATES = {
                 ${data.projects
                   .map(
                     (proj, idx) => `
-                  <div class="project-card ${idx % 2 === 0 ? "project-wide" : ""}">
+                  <div class="project-card ${
+                    idx % 2 === 0 ? "project-wide" : ""
+                  }">
                     <div class="project-header">
                       <h3>${proj.name || "Project"}</h3>
                     </div>
-                    ${proj.description ? `<p class="project-desc">${proj.description}</p>` : ""}
+                    ${
+                      proj.description
+                        ? `<p class="project-desc">${proj.description}</p>`
+                        : ""
+                    }
                   </div>
                 `
                   )
@@ -721,8 +776,12 @@ const TEMPLATES = {
               <h2>Skills & Expertise</h2>
               <div class="skills-cloud">
                 ${data.skills
-                  .flatMap((skill) => (Array.isArray(skill.keywords) ? skill.keywords : []))
-                  .map((keyword) => `<span class="skill-pill">${keyword}</span>`)
+                  .flatMap((skill) =>
+                    Array.isArray(skill.keywords) ? skill.keywords : []
+                  )
+                  .map(
+                    (keyword) => `<span class="skill-pill">${keyword}</span>`
+                  )
                   .join("")}
               </div>
             </section>
@@ -731,9 +790,21 @@ const TEMPLATES = {
           }
 
           <div class="creative-footer">
-            ${data.basics?.email ? `<div class="footer-item">📧 ${data.basics.email}</div>` : ""}
-            ${data.basics?.phone ? `<div class="footer-item">📱 ${data.basics.phone}</div>` : ""}
-            ${data.basics?.location ? `<div class="footer-item">📍 ${data.basics.location}</div>` : ""}
+            ${
+              data.basics?.email
+                ? `<div class="footer-item">📧 ${data.basics.email}</div>`
+                : ""
+            }
+            ${
+              data.basics?.phone
+                ? `<div class="footer-item">📱 ${data.basics.phone}</div>`
+                : ""
+            }
+            ${
+              data.basics?.location
+                ? `<div class="footer-item">📍 ${data.basics.location}</div>`
+                : ""
+            }
           </div>
         </div>
       `;
@@ -1386,14 +1457,24 @@ const TEMPLATES = {
           <div class="formal-header">
             <div class="header-divider">═══════════════════════════════════════════════════════════════</div>
             <h1>${data.basics?.name || "YOUR NAME"}</h1>
-            <p class="formal-title">${(data.basics?.label || "EXECUTIVE").toUpperCase()}</p>
+            <p class="formal-title">${(
+              data.basics?.label || "EXECUTIVE"
+            ).toUpperCase()}</p>
             <div class="header-divider">═══════════════════════════════════════════════════════════════</div>
           </div>
 
           <div class="formal-contact">
             ${data.basics?.email ? `<span>${data.basics.email}</span>` : ""}
-            ${data.basics?.phone ? `<span>•</span><span>${data.basics.phone}</span>` : ""}
-            ${data.basics?.location ? `<span>•</span><span>${data.basics.location}</span>` : ""}
+            ${
+              data.basics?.phone
+                ? `<span>•</span><span>${data.basics.phone}</span>`
+                : ""
+            }
+            ${
+              data.basics?.location
+                ? `<span>•</span><span>${data.basics.location}</span>`
+                : ""
+            }
           </div>
 
           ${
@@ -1419,10 +1500,19 @@ const TEMPLATES = {
                   (job) => `
                 <div class="formal-entry">
                   <div class="entry-header">
-                    <h3>${job.position || "Position"} | ${job.name || "Company"}</h3>
-                    <span class="entry-date">${formatDate(job.startDate, job.endDate)}</span>
+                    <h3>${job.position || "Position"} | ${
+                    job.name || "Company"
+                  }</h3>
+                    <span class="entry-date">${formatDate(
+                      job.startDate,
+                      job.endDate
+                    )}</span>
                   </div>
-                  ${job.summary ? `<p class="formal-text">${job.summary}</p>` : ""}
+                  ${
+                    job.summary
+                      ? `<p class="formal-text">${job.summary}</p>`
+                      : ""
+                  }
                 </div>
               `
                 )
@@ -1443,8 +1533,13 @@ const TEMPLATES = {
                   (edu) => `
                 <div class="formal-entry compact">
                   <div class="entry-header">
-                    <h3>${edu.studyType || "Degree"} in ${edu.area || "Field"}</h3>
-                    <span class="entry-date">${formatDate(edu.startDate, edu.endDate)}</span>
+                    <h3>${edu.studyType || "Degree"} in ${
+                    edu.area || "Field"
+                  }</h3>
+                    <span class="entry-date">${formatDate(
+                      edu.startDate,
+                      edu.endDate
+                    )}</span>
                   </div>
                   <p class="institution">${edu.institution || "Institution"}</p>
                 </div>
@@ -1494,7 +1589,11 @@ const TEMPLATES = {
                   (proj) => `
                 <div class="formal-entry compact">
                   <h3>▸ ${proj.name || "Project"}</h3>
-                  ${proj.description ? `<p class="formal-text">${proj.description}</p>` : ""}
+                  ${
+                    proj.description
+                      ? `<p class="formal-text">${proj.description}</p>`
+                      : ""
+                  }
                 </div>
               `
                 )
@@ -1676,13 +1775,19 @@ const TEMPLATES = {
           <div class="swiss-grid-layout">
             <aside class="swiss-sidebar">
               ${
-                data.basics?.email || data.basics?.phone || data.basics?.location
+                data.basics?.email ||
+                data.basics?.phone ||
+                data.basics?.location
                   ? `
                 <section class="swiss-box">
                   <h3>Contact</h3>
                   ${data.basics?.email ? `<p>📧 ${data.basics.email}</p>` : ""}
                   ${data.basics?.phone ? `<p>📱 ${data.basics.phone}</p>` : ""}
-                  ${data.basics?.location ? `<p>📍 ${data.basics.location}</p>` : ""}
+                  ${
+                    data.basics?.location
+                      ? `<p>📍 ${data.basics.location}</p>`
+                      : ""
+                  }
                 </section>
               `
                   : ""
@@ -1738,11 +1843,18 @@ const TEMPLATES = {
                       .map(
                         (job) => `
                       <div class="timeline-entry">
-                        <div class="entry-date">${formatDate(job.startDate, job.endDate)}</div>
+                        <div class="entry-date">${formatDate(
+                          job.startDate,
+                          job.endDate
+                        )}</div>
                         <div class="entry-content">
                           <h3>${job.position || "Position"}</h3>
                           <p class="company">${job.name || "Company"}</p>
-                          ${job.summary ? `<p class="description">${job.summary}</p>` : ""}
+                          ${
+                            job.summary
+                              ? `<p class="description">${job.summary}</p>`
+                              : ""
+                          }
                         </div>
                       </div>
                     `
@@ -1764,10 +1876,17 @@ const TEMPLATES = {
                       .map(
                         (edu) => `
                       <div class="timeline-entry">
-                        <div class="entry-date">${formatDate(edu.startDate, edu.endDate)}</div>
+                        <div class="entry-date">${formatDate(
+                          edu.startDate,
+                          edu.endDate
+                        )}</div>
                         <div class="entry-content">
-                          <h3>${edu.studyType || "Degree"} in ${edu.area || "Field"}</h3>
-                          <p class="institution">${edu.institution || "Institution"}</p>
+                          <h3>${edu.studyType || "Degree"} in ${
+                          edu.area || "Field"
+                        }</h3>
+                          <p class="institution">${
+                            edu.institution || "Institution"
+                          }</p>
                         </div>
                       </div>
                     `
@@ -1969,45 +2088,39 @@ const TEMPLATES = {
       };
 
       const html = `
-        <div class="resume-content minimal">
-          <h1>${data.basics?.name || "Your Name"}</h1>
-          <p class="title">${data.basics?.label || "Professional"}</p>
-          ${
-            data.basics?.summary
-              ? `<p class="intro">${data.basics.summary}</p>`
-              : ""
-          }
+        <div class="resume-content zen-minimal">
+          <header class="zen-header">
+            <h1>${data.basics?.name || "Your Name"}</h1>
+            <p class="zen-title">${data.basics?.label || "Professional"}</p>
+            ${data.basics?.summary ? `<p class="zen-intro">${data.basics.summary}</p>` : ""}
+          </header>
 
-          <div class="contact">${[
-            data.basics?.email,
-            data.basics?.phone,
-            data.basics?.location,
-          ]
-            .filter(Boolean)
-            .join(" • ")}</div>
+          <div class="zen-contact">
+            ${data.basics?.email ? `<span>${data.basics.email}</span>` : ""}
+            ${data.basics?.phone ? `<span>${data.basics.phone}</span>` : ""}
+            ${data.basics?.location ? `<span>${data.basics.location}</span>` : ""}
+          </div>
 
           ${
             data.work && data.work.length
               ? `
-            <div class="section">
+            <section class="zen-section">
               <h2>Experience</h2>
               ${data.work
                 .map(
                   (job) => `
-                <div class="item">
-                  <strong>${job.position || "Position"}</strong> at <em>${
-                    job.name || "Company"
-                  }</em>
-                  <div class="meta">${formatDate(
-                    job.startDate,
-                    job.endDate
-                  )}</div>
-                  ${job.summary ? `<p>${job.summary}</p>` : ""}
+                <div class="zen-entry">
+                  <div class="zen-entry-header">
+                    <h3>${job.position || "Position"}</h3>
+                    <span>${formatDate(job.startDate, job.endDate)}</span>
+                  </div>
+                  <p class="zen-company">${job.name || "Company"}</p>
+                  ${job.summary ? `<p class="zen-text">${job.summary}</p>` : ""}
                 </div>
               `
                 )
                 .join("")}
-            </div>
+            </section>
           `
               : ""
           }
@@ -2015,24 +2128,22 @@ const TEMPLATES = {
           ${
             data.education && data.education.length
               ? `
-            <div class="section">
+            <section class="zen-section">
               <h2>Education</h2>
               ${data.education
                 .map(
                   (edu) => `
-                <div class="item">
-                  <strong>${edu.studyType || "Degree"} in ${
-                    edu.area || "Field"
-                  }</strong> — ${edu.institution || "Institution"}
-                  <div class="meta">${formatDate(
-                    edu.startDate,
-                    edu.endDate
-                  )}</div>
+                <div class="zen-entry">
+                  <div class="zen-entry-header">
+                    <h3>${edu.studyType || "Degree"} in ${edu.area || "Field"}</h3>
+                    <span>${formatDate(edu.startDate, edu.endDate)}</span>
+                  </div>
+                  <p class="zen-company">${edu.institution || "Institution"}</p>
                 </div>
               `
                 )
                 .join("")}
-            </div>
+            </section>
           `
               : ""
           }
@@ -2040,19 +2151,45 @@ const TEMPLATES = {
           ${
             data.skills && data.skills.length
               ? `
-            <div class="section">
+            <section class="zen-section">
               <h2>Skills</h2>
-              <p>${data.skills
+              <div class="zen-skills">
+                ${data.skills
+                  .map(
+                    (skill) => `
+                  <div class="skill-item">
+                    <strong>${skill.name}</strong>
+                    <p>${
+                      Array.isArray(skill.keywords)
+                        ? skill.keywords.join(", ")
+                        : skill.keywords || ""
+                    }</p>
+                  </div>
+                `
+                  )
+                  .join("")}
+              </div>
+            </section>
+          `
+              : ""
+          }
+
+          ${
+            data.projects && data.projects.length
+              ? `
+            <section class="zen-section">
+              <h2>Projects</h2>
+              ${data.projects
                 .map(
-                  (s) =>
-                    `${s.name}${
-                      Array.isArray(s.keywords) && s.keywords.length
-                        ? ` (${s.keywords.slice(0, 2).join(", ")})`
-                        : ""
-                    }`
+                  (proj) => `
+                <div class="zen-entry">
+                  <h3>${proj.name}</h3>
+                  ${proj.description ? `<p class="zen-text">${proj.description}</p>` : ""}
+                </div>
+              `
                 )
-                .join(" • ")}</p>
-            </div>
+                .join("")}
+            </section>
           `
               : ""
           }
@@ -2060,60 +2197,127 @@ const TEMPLATES = {
       `;
 
       const css = `
-        .resume-content.minimal {
-          font-family: 'Helvetica Neue', sans-serif;
-          max-width: 800px;
-          color: #222;
-          line-height: 1.5;
+        .resume-content.zen-minimal {
+          font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
+          color: #2c3e50;
+          background: #fafafa;
+          max-width: 850px;
+          margin: 0 auto;
         }
-        .resume-content.minimal h1 {
-          font-size: 20px;
-          margin: 0 0 5px 0;
-          font-weight: 700;
+        .zen-header {
+          padding: 60px 40px 40px;
+          background: white;
+          border-bottom: 1px solid #ecf0f1;
         }
-        .resume-content.minimal h2 {
-          font-size: 12px;
-          margin: 15px 0 10px 0;
-          font-weight: 700;
-          text-transform: uppercase;
+        .zen-header h1 {
+          font-size: 32px;
+          margin: 0 0 8px 0;
+          font-weight: 300;
+          letter-spacing: 2px;
+        }
+        .zen-title {
+          font-size: 13px;
+          color: #95a5a6;
+          margin: 0 0 16px 0;
+          font-weight: 400;
           letter-spacing: 1px;
-          border-bottom: 1px solid #ddd;
-          padding-bottom: 5px;
+          text-transform: uppercase;
         }
-        .title {
+        .zen-intro {
+          font-size: 13px;
+          line-height: 1.7;
+          color: #555;
+          margin: 0;
+          max-width: 600px;
+          font-weight: 300;
+        }
+        .zen-contact {
+          background: white;
+          padding: 20px 40px;
+          display: flex;
+          gap: 20px;
+          font-size: 11px;
+          color: #7f8c8d;
+          border-bottom: 1px solid #ecf0f1;
+          flex-wrap: wrap;
+        }
+        .zen-section {
+          background: white;
+          padding: 40px;
+          margin-bottom: 0;
+          border-bottom: 1px solid #ecf0f1;
+        }
+        .zen-section h2 {
+          font-size: 13px;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 2px;
+          margin: 0 0 28px 0;
+          color: #2c3e50;
+          padding-bottom: 12px;
+          border-bottom: 2px solid #ecf0f1;
+        }
+        .zen-entry {
+          margin-bottom: 24px;
+        }
+        .zen-entry:last-child {
+          margin-bottom: 0;
+        }
+        .zen-entry-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: baseline;
+          gap: 20px;
+          margin-bottom: 6px;
+        }
+        .zen-entry h3 {
+          font-size: 13px;
+          margin: 0;
+          font-weight: 600;
+          color: #2c3e50;
+          flex: 1;
+        }
+        .zen-entry-header span {
+          font-size: 11px;
+          color: #95a5a6;
+          white-space: nowrap;
+          font-weight: 400;
+        }
+        .zen-company {
+          font-size: 11px;
+          color: #7f8c8d;
+          margin: 0 0 8px 0;
+          font-weight: 500;
+        }
+        .zen-text {
           font-size: 12px;
-          color: #666;
-          margin: 0 0 10px 0;
+          line-height: 1.6;
+          color: #555;
+          margin: 10px 0 0 0;
+          font-weight: 300;
         }
-        .intro {
+        .zen-skills {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+          gap: 24px;
+        }
+        .skill-item {
+          padding-bottom: 16px;
+          border-bottom: 1px solid #ecf0f1;
+        }
+        .skill-item strong {
+          display: block;
+          font-size: 12px;
+          font-weight: 600;
+          margin-bottom: 8px;
+          color: #2c3e50;
+        }
+        .skill-item p {
           font-size: 11px;
-          line-height: 1.4;
-          margin-bottom: 10px;
-        }
-        .contact {
-          font-size: 10px;
-          color: #888;
-          margin-bottom: 15px;
-        }
-        .section {
-          margin-bottom: 15px;
-        }
-        .item {
-          margin-bottom: 10px;
-          font-size: 11px;
-        }
-        .item strong {
-          font-weight: 700;
-        }
-        .meta {
-          font-size: 10px;
-          color: #999;
-          margin: 2px 0;
-        }
-        .item p {
-          margin: 5px 0 0 0;
-          font-size: 10px;
-          line-height: 1.4;
+          color: #7f8c8d;
+          margin: 0;
+          line-height: 1.5;
+          font-weight: 300;
         }
       `;
 

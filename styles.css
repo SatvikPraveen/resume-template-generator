@@ -836,12 +836,21 @@ body {
     background: white !important;
   }
 
+  .resume-content {
+    border: none !important;
+    border-top: none !important;
+    border-bottom: none !important;
+    box-shadow: none !important;
+  }
+
   .action-btns {
     display: none !important;
   }
 
   .section {
     border: none !important;
+    border-top: none !important;
+    border-bottom: none !important;
     box-shadow: none !important;
   }
 

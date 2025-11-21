@@ -713,11 +713,11 @@ body {
 
 /* ==================== RESUME CONTAINER ==================== */
 .resume-container {
-  background: white;
-  border-radius: var(--radius-lg);
-  padding: 3rem;
+  background: transparent;
+  border-radius: 0;
+  padding: 0;
   min-height: 500px;
-  box-shadow: var(--shadow-xl);
+  box-shadow: none;
   color: #333;
 }
 

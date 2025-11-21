@@ -323,15 +323,24 @@
       // Import pdf.mjs which sets up globalThis.pdfjsLib
       import * as pdfModule from "./vendor/pdf.mjs";
 
+      // Explicitly attach pdfjsLib to window so non-module scripts can access it
+      window.pdfjsLib = pdfModule;
+
       // Configure the worker to use local file
       if (window.pdfjsLib && window.pdfjsLib.GlobalWorkerOptions) {
         window.pdfjsLib.GlobalWorkerOptions.workerSrc =
           "./vendor/pdf.worker.mjs";
       }
 
+      // Set flag to indicate module is ready
+      window._pdfModuleReady = true;
+
       // Dispatch event so other scripts know pdf.js is ready
       window.dispatchEvent(new Event("pdfjs-ready"));
     </script>
+
+    <!-- Load PDFTextExtractor FIRST before other PDF scripts -->
+    <script src="src/parsers/pdfjs-parser.js"></script>
 
     <!-- ========== PDF.JS MASTER APIS (Complete Capability Exposure) ========== -->
     <!-- Master API wrapper - exposes ALL 56+ pdf.mjs APIs -->
@@ -352,10 +361,6 @@
 
     <!-- Advanced Template Renderer -->
     <script src="src/core/TemplateRenderer.js"></script>
-
-    <!-- ========== LEGACY MODULES (Backward Compatibility) ========== -->
-    <!-- Legacy PDF text extractor -->
-    <script src="src/parsers/pdfjs-parser.js"></script>
 
     <!-- Legacy Template Renderer -->
     <script src="templates.js"></script>

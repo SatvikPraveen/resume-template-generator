@@ -808,6 +808,7 @@ body {
     background: white !important;
     margin: 0 !important;
     padding: 0 !important;
+    border: none !important;
   }
 
   .header,
@@ -819,9 +820,12 @@ body {
   .preview-section {
     background: white !important;
     border: none !important;
+    border-top: none !important;
+    border-bottom: none !important;
     padding: 0 !important;
     margin: 0 !important;
     box-shadow: none !important;
+    page-break-after: avoid !important;
   }
 
   .preview-section .section-header {
@@ -831,6 +835,8 @@ body {
   .resume-container {
     box-shadow: none !important;
     border: none !important;
+    border-top: none !important;
+    border-bottom: none !important;
     padding: 0 !important;
     margin: 0 !important;
     background: white !important;
@@ -840,19 +846,24 @@ body {
     display: none !important;
   }
 
-  /* Remove ALL borders, shadows and decorations */
-  * {
-    box-shadow: none !important;
+  /* Remove decorative elements */
+  .section {
     border: none !important;
+    box-shadow: none !important;
+    page-break-inside: avoid !important;
   }
 
-  /* Preserve essential borders in resume content */
-  .resume-content * {
-    border: inherit !important;
+  /* Clean page breaks */
+  .resume-content {
+    border: none !important;
+    box-shadow: none !important;
+    background: white !important;
+    page-break-inside: auto !important;
   }
 
   @page {
     margin: 0.5in;
     background: white;
+    border: none;
   }
 }

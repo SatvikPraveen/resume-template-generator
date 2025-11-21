@@ -787,39 +787,6 @@ body {
   }
 }
 
-/* ==================== PREVIEW SECTION - HIDE HEADER & BUTTONS ==================== */
-.preview-section .section-header {
-  display: none !important;
-  visibility: hidden !important;
-  height: 0 !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  border: none !important;
-}
-
-.preview-section .section-header h2 {
-  display: none !important;
-}
-
-.preview-section .action-btns {
-  display: none !important;
-  visibility: hidden !important;
-  height: 0 !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  border: none !important;
-}
-
-.preview-section .action-btns button {
-  display: none !important;
-  visibility: hidden !important;
-}
-
-.preview-section .btn {
-  display: none !important;
-  visibility: hidden !important;
-}
-
 /* ==================== PRINT STYLES ==================== */
 @media print {
   .header,

@@ -268,38 +268,25 @@ const TEMPLATES = {
       };
 
       const html = `
-        <div class="resume-content modern">
-          <div class="sidebar">
-            <div class="profile-section">
+        <div class="resume-content modern-enhanced">
+          <aside class="modern-sidebar">
+            <div class="modern-header">
               <h1>${data.basics?.name || "Your Name"}</h1>
-              <p class="subtitle">${data.basics?.label || "Professional"}</p>
-              ${
-                data.basics?.summary
-                  ? `<p class="bio">${data.basics.summary}</p>`
-                  : ""
-              }
+              <p class="modern-title">${data.basics?.label || "Professional"}</p>
             </div>
+
+            ${data.basics?.summary ? `<p class="modern-bio">${data.basics.summary}</p>` : ""}
 
             ${
               data.basics?.email || data.basics?.phone || data.basics?.location
                 ? `
-              <div class="contact-box">
+              <div class="modern-section">
                 <h3>Contact</h3>
-                ${
-                  data.basics?.email
-                    ? `<p><strong>Email:</strong> ${data.basics.email}</p>`
-                    : ""
-                }
-                ${
-                  data.basics?.phone
-                    ? `<p><strong>Phone:</strong> ${data.basics.phone}</p>`
-                    : ""
-                }
-                ${
-                  data.basics?.location
-                    ? `<p><strong>Location:</strong> ${data.basics.location}</p>`
-                    : ""
-                }
+                <div class="modern-contact">
+                  ${data.basics?.email ? `<div class="contact-item"><span class="icon">✉</span>${data.basics.email}</div>` : ""}
+                  ${data.basics?.phone ? `<div class="contact-item"><span class="icon">☎</span>${data.basics.phone}</div>` : ""}
+                  ${data.basics?.location ? `<div class="contact-item"><span class="icon">📍</span>${data.basics.location}</div>` : ""}
+                </div>
               </div>
             `
                 : ""
@@ -308,52 +295,55 @@ const TEMPLATES = {
             ${
               data.skills && data.skills.length
                 ? `
-              <div class="skills-box">
+              <div class="modern-section">
                 <h3>Skills</h3>
-                ${data.skills
-                  .map(
-                    (skill) => `
-                  <div class="skill-tag">
-                    <strong>${skill.name || "Skill"}</strong>
-                    ${
-                      Array.isArray(skill.keywords)
-                        ? skill.keywords.slice(0, 2).join(", ")
-                        : ""
-                    }
-                  </div>
-                `
-                  )
-                  .join("")}
+                <div class="modern-skills">
+                  ${data.skills
+                    .map(
+                      (skill) => `
+                    <div class="skill-category">
+                      <h4>${skill.name || "Skill"}</h4>
+                      <div class="skill-badges">
+                        ${
+                          Array.isArray(skill.keywords)
+                            ? skill.keywords
+                                .map(
+                                  (kw) =>
+                                    `<span class="badge">${kw}</span>`
+                                )
+                                .join("")
+                            : ""
+                        }
+                      </div>
+                    </div>
+                  `
+                    )
+                    .join("")}
+                </div>
               </div>
             `
                 : ""
             }
-          </div>
+          </aside>
 
-          <div class="main-content">
+          <main class="modern-main">
             ${
               data.work && data.work.length
                 ? `
-              <section class="content-section">
-                <h2>Experience</h2>
+              <section class="modern-block">
+                <h2>Work Experience</h2>
                 ${data.work
                   .map(
                     (job) => `
-                  <div class="timeline-item">
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content">
-                      <h3>${job.position || "Position"}</h3>
-                      <p class="company-name">${job.name || "Company"}</p>
-                      <span class="date">${formatDate(
-                        job.startDate,
-                        job.endDate
-                      )}</span>
-                      ${
-                        job.summary
-                          ? `<p class="description">${job.summary}</p>`
-                          : ""
-                      }
+                  <div class="modern-card">
+                    <div class="card-header">
+                      <div>
+                        <h3>${job.position || "Position"}</h3>
+                        <p class="card-subtitle">${job.name || "Company"}</p>
+                      </div>
+                      <span class="card-date">${formatDate(job.startDate, job.endDate)}</span>
                     </div>
+                    ${job.summary ? `<p class="card-description">${job.summary}</p>` : ""}
                   </div>
                 `
                   )
@@ -366,24 +356,18 @@ const TEMPLATES = {
             ${
               data.education && data.education.length
                 ? `
-              <section class="content-section">
+              <section class="modern-block">
                 <h2>Education</h2>
                 ${data.education
                   .map(
                     (edu) => `
-                  <div class="timeline-item">
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content">
-                      <h3>${edu.studyType || "Degree"} in ${
-                      edu.area || "Field"
-                    }</h3>
-                      <p class="institution-name">${
-                        edu.institution || "Institution"
-                      }</p>
-                      <span class="date">${formatDate(
-                        edu.startDate,
-                        edu.endDate
-                      )}</span>
+                  <div class="modern-card">
+                    <div class="card-header">
+                      <div>
+                        <h3>${edu.studyType || "Degree"} in ${edu.area || "Field"}</h3>
+                        <p class="card-subtitle">${edu.institution || "Institution"}</p>
+                      </div>
+                      <span class="card-date">${formatDate(edu.startDate, edu.endDate)}</span>
                     </div>
                   </div>
                 `
@@ -397,150 +381,208 @@ const TEMPLATES = {
             ${
               data.projects && data.projects.length
                 ? `
-              <section class="content-section">
+              <section class="modern-block">
                 <h2>Projects</h2>
-                ${data.projects
-                  .map(
-                    (proj) => `
-                  <div class="project-item">
-                    <h3>${proj.name || "Project"}</h3>
-                    ${proj.description ? `<p>${proj.description}</p>` : ""}
-                  </div>
-                `
-                  )
-                  .join("")}
+                <div class="projects-grid">
+                  ${data.projects
+                    .map(
+                      (proj) => `
+                    <div class="project-card">
+                      <h3>${proj.name || "Project"}</h3>
+                      ${proj.description ? `<p>${proj.description}</p>` : ""}
+                    </div>
+                  `
+                    )
+                    .join("")}
+                </div>
               </section>
             `
                 : ""
             }
-          </div>
+          </main>
         </div>
       `;
 
       const css = `
-        .resume-content.modern {
+        .resume-content.modern-enhanced {
           display: grid;
           grid-template-columns: 280px 1fr;
-          gap: 40px;
-          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          gap: 30px;
+          font-family: 'Inter', 'Segoe UI', sans-serif;
+          max-width: 1000px;
+          margin: 0 auto;
         }
-        .sidebar {
+        .modern-sidebar {
           background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
           color: white;
-          padding: 30px;
-          border-radius: 8px;
+          padding: 35px 25px;
+          border-radius: 12px;
+          height: fit-content;
         }
-        .profile-section h1 {
-          font-size: 24px;
-          margin: 0 0 5px 0;
-          font-weight: 700;
+        .modern-header h1 {
+          font-size: 26px;
+          margin: 0 0 8px 0;
+          font-weight: 800;
+          letter-spacing: -0.5px;
         }
-        .subtitle {
+        .modern-title {
+          font-size: 14px;
+          opacity: 0.95;
+          margin: 0 0 20px 0;
+          font-weight: 500;
+        }
+        .modern-bio {
           font-size: 13px;
+          line-height: 1.6;
+          margin-bottom: 25px;
           opacity: 0.9;
-          margin: 0 0 15px 0;
         }
-        .bio {
+        .modern-section {
+          margin-bottom: 25px;
+        }
+        .modern-section h3 {
           font-size: 12px;
-          line-height: 1.5;
-          margin-bottom: 20px;
+          text-transform: uppercase;
+          letter-spacing: 1.5px;
+          margin: 0 0 12px 0;
+          font-weight: 700;
           opacity: 0.95;
         }
-        .contact-box, .skills-box {
-          background: rgba(255,255,255,0.1);
-          padding: 15px;
-          border-radius: 6px;
-          margin-bottom: 20px;
+        .modern-contact {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
         }
-        .contact-box h3, .skills-box h3 {
+        .contact-item {
           font-size: 12px;
-          margin: 0 0 10px 0;
-          text-transform: uppercase;
-          letter-spacing: 1px;
+          display: flex;
+          align-items: center;
+          gap: 8px;
         }
-        .contact-box p {
-          font-size: 11px;
-          margin: 5px 0;
+        .contact-item .icon {
+          font-size: 14px;
+          opacity: 0.9;
         }
-        .skill-tag {
-          background: rgba(255,255,255,0.2);
-          padding: 6px 10px;
-          border-radius: 4px;
-          margin-bottom: 8px;
-          font-size: 11px;
+        .skill-category {
+          margin-bottom: 15px;
         }
-        .skill-tag strong {
-          display: block;
+        .skill-category h4 {
           font-size: 12px;
-          margin-bottom: 2px;
+          margin: 0 0 8px 0;
+          font-weight: 600;
+          opacity: 0.95;
         }
-        .main-content {
-          padding-right: 20px;
+        .skill-badges {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 6px;
         }
-        .content-section {
-          margin-bottom: 35px;
+        .badge {
+          background: rgba(255, 255, 255, 0.25);
+          padding: 4px 10px;
+          border-radius: 20px;
+          font-size: 11px;
+          font-weight: 500;
+          border: 1px solid rgba(255, 255, 255, 0.3);
         }
-        .content-section h2 {
-          font-size: 16px;
-          font-weight: 700;
-          margin: 0 0 20px 0;
-          color: #333;
+        .modern-main {
+          padding: 10px 15px;
+        }
+        .modern-block {
+          margin-bottom: 40px;
+        }
+        .modern-block h2 {
+          font-size: 18px;
+          font-weight: 800;
+          margin: 0 0 25px 0;
+          color: #1a1a1a;
           position: relative;
-          padding-bottom: 10px;
+          padding-bottom: 12px;
         }
-        .content-section h2:after {
+        .modern-block h2:after {
           content: '';
           position: absolute;
           bottom: 0;
           left: 0;
-          width: 40px;
-          height: 3px;
-          background: #667eea;
+          width: 50px;
+          height: 4px;
+          background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+          border-radius: 2px;
         }
-        .timeline-item {
-          display: flex;
-          gap: 20px;
+        .modern-card {
           margin-bottom: 20px;
-          position: relative;
+          padding: 18px;
+          background: #f8f9fa;
+          border-left: 4px solid #667eea;
+          border-radius: 8px;
+          transition: all 0.3s ease;
         }
-        .timeline-marker {
-          width: 12px;
-          height: 12px;
-          background: #667eea;
-          border-radius: 50%;
-          margin-top: 5px;
-          flex-shrink: 0;
+        .modern-card:hover {
+          box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+          transform: translateX(4px);
         }
-        .timeline-content h3 {
+        .card-header {
+          display: flex;
+          justify-content: space-between;
+          gap: 15px;
+          margin-bottom: 10px;
+        }
+        .card-header h3 {
           font-size: 14px;
-          margin: 0 0 3px 0;
+          margin: 0;
           font-weight: 700;
+          color: #1a1a1a;
         }
-        .company-name, .institution-name {
+        .card-subtitle {
           font-size: 12px;
           color: #666;
-          margin: 0 0 5px 0;
+          margin: 5px 0 0 0;
+          font-weight: 500;
         }
-        .date {
+        .card-date {
           font-size: 11px;
           color: #999;
+          white-space: nowrap;
+          margin-top: 2px;
         }
-        .description {
+        .card-description {
           font-size: 12px;
-          margin: 8px 0 0 0;
-          line-height: 1.5;
+          line-height: 1.6;
+          color: #555;
+          margin: 10px 0 0 0;
         }
-        .project-item {
-          margin-bottom: 15px;
+        .projects-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+          gap: 18px;
         }
-        .project-item h3 {
-          font-size: 13px;
-          margin: 0 0 5px 0;
+        .project-card {
+          padding: 18px;
+          background: white;
+          border: 2px solid #e0e0e0;
+          border-radius: 8px;
+          transition: all 0.3s ease;
+        }
+        .project-card:hover {
+          border-color: #667eea;
+          box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
+        }
+        .project-card h3 {
+          font-size: 14px;
+          margin: 0 0 8px 0;
           font-weight: 700;
+          color: #1a1a1a;
         }
-        .project-item p {
+        .project-card p {
           font-size: 12px;
+          color: #666;
+          line-height: 1.5;
           margin: 0;
+        }
+        @media print {
+          .modern-sidebar { background: white; color: #1a1a1a; }
+          .badge { background: #f0f0f0; color: #1a1a1a; border: 1px solid #ddd; }
+          .modern-card { border-left-color: #1a1a1a; background: white; }
         }
       `;
 
@@ -569,261 +611,358 @@ const TEMPLATES = {
       };
 
       const html = `
-        <div class="resume-content creative">
-          <div class="hero-section">
-            <h1>${data.basics?.name || "Your Name"}</h1>
-            <p class="tagline">${
-              data.basics?.label || "Creative Professional"
-            }</p>
-            <div class="accent-bar"></div>
-          </div>
-
-          <div class="creative-grid">
-            <div class="left-column">
-              ${
-                data.basics?.summary
-                  ? `
-                <section class="creative-section about-section">
-                  <h2>About</h2>
-                  <p>${data.basics.summary}</p>
-                </section>
-              `
-                  : ""
-              }
-
-              ${
-                data.skills && data.skills.length
-                  ? `
-                <section class="creative-section">
-                  <h2>Expertise</h2>
-                  ${data.skills
-                    .map(
-                      (skill) => `
-                    <div class="expertise-item">
-                      <h3>${skill.name || "Skill"}</h3>
-                      <div class="keywords">${
-                        Array.isArray(skill.keywords)
-                          ? skill.keywords.join(" • ")
-                          : skill.keywords || ""
-                      }</div>
-                    </div>
-                  `
-                    )
-                    .join("")}
-                </section>
-              `
-                  : ""
-              }
-            </div>
-
-            <div class="right-column">
-              ${
-                data.work && data.work.length
-                  ? `
-                <section class="creative-section">
-                  <h2>Experience</h2>
-                  ${data.work
-                    .map(
-                      (job) => `
-                    <div class="creative-entry">
-                      <div class="entry-title">
-                        <h3>${job.position || "Position"}</h3>
-                        <span class="entry-date">${formatDate(
-                          job.startDate,
-                          job.endDate
-                        )}</span>
-                      </div>
-                      <p class="entry-company">${job.name || "Company"}</p>
-                      ${
-                        job.summary
-                          ? `<p class="entry-summary">${job.summary}</p>`
-                          : ""
-                      }
-                    </div>
-                  `
-                    )
-                    .join("")}
-                </section>
-              `
-                  : ""
-              }
-
-              ${
-                data.education && data.education.length
-                  ? `
-                <section class="creative-section">
-                  <h2>Education</h2>
-                  ${data.education
-                    .map(
-                      (edu) => `
-                    <div class="creative-entry">
-                      <div class="entry-title">
-                        <h3>${edu.studyType || "Degree"} in ${
-                        edu.area || "Field"
-                      }</h3>
-                        <span class="entry-date">${formatDate(
-                          edu.startDate,
-                          edu.endDate
-                        )}</span>
-                      </div>
-                      <p class="entry-institution">${
-                        edu.institution || "Institution"
-                      }</p>
-                    </div>
-                  `
-                    )
-                    .join("")}
-                </section>
-              `
-                  : ""
-              }
-
-              ${
-                data.projects && data.projects.length
-                  ? `
-                <section class="creative-section">
-                  <h2>Projects</h2>
-                  ${data.projects
-                    .map(
-                      (proj) => `
-                    <div class="creative-entry">
-                      <h3>${proj.name || "Project"}</h3>
-                      ${proj.description ? `<p>${proj.description}</p>` : ""}
-                    </div>
-                  `
-                    )
-                    .join("")}
-                </section>
-              `
-                  : ""
-              }
+        <div class="resume-content creative-portfolio">
+          <div class="creative-hero">
+            <div class="hero-content">
+              <h1 class="hero-name">${data.basics?.name || "Your Name"}</h1>
+              <p class="hero-title">${data.basics?.label || "Creative Professional"}</p>
+              ${data.basics?.summary ? `<p class="hero-bio">${data.basics.summary}</p>` : ""}
             </div>
           </div>
 
           ${
-            data.basics?.email || data.basics?.phone
+            data.skills && data.skills.length
               ? `
-            <div class="footer-info">
-              ${data.basics?.email ? `<span>${data.basics.email}</span>` : ""}
-              ${data.basics?.phone ? `<span>${data.basics.phone}</span>` : ""}
-              ${
-                data.basics?.location
-                  ? `<span>${data.basics.location}</span>`
-                  : ""
-              }
+            <div class="stats-container">
+              ${data.skills
+                .slice(0, 3)
+                .map(
+                  (skill, idx) => `
+                <div class="stat-card">
+                  <div class="stat-number">${skill.keywords ? skill.keywords.length : 0}</div>
+                  <div class="stat-label">${skill.name}</div>
+                </div>
+              `
+                )
+                .join("")}
             </div>
           `
               : ""
           }
+
+          ${
+            data.work && data.work.length
+              ? `
+            <section class="creative-section">
+              <h2>Work Experience</h2>
+              <div class="cards-grid">
+                ${data.work
+                  .map(
+                    (job) => `
+                  <div class="experience-card">
+                    <div class="card-accent"></div>
+                    <h3>${job.position || "Position"}</h3>
+                    <p class="card-company">${job.name || "Company"}</p>
+                    <p class="card-date">${formatDate(job.startDate, job.endDate)}</p>
+                    ${job.summary ? `<p class="card-text">${job.summary}</p>` : ""}
+                  </div>
+                `
+                  )
+                  .join("")}
+              </div>
+            </section>
+          `
+              : ""
+          }
+
+          ${
+            data.education && data.education.length
+              ? `
+            <section class="creative-section">
+              <h2>Education</h2>
+              <div class="cards-grid">
+                ${data.education
+                  .map(
+                    (edu) => `
+                  <div class="education-card">
+                    <div class="card-accent-alt"></div>
+                    <h3>${edu.studyType || "Degree"}</h3>
+                    <p class="card-major">${edu.area || "Field"}</p>
+                    <p class="card-school">${edu.institution || "Institution"}</p>
+                    <p class="card-date">${formatDate(edu.startDate, edu.endDate)}</p>
+                  </div>
+                `
+                  )
+                  .join("")}
+              </div>
+            </section>
+          `
+              : ""
+          }
+
+          ${
+            data.projects && data.projects.length
+              ? `
+            <section class="creative-section">
+              <h2>Featured Projects</h2>
+              <div class="projects-masonry">
+                ${data.projects
+                  .map(
+                    (proj, idx) => `
+                  <div class="project-card ${idx % 2 === 0 ? "project-wide" : ""}">
+                    <div class="project-header">
+                      <h3>${proj.name || "Project"}</h3>
+                    </div>
+                    ${proj.description ? `<p class="project-desc">${proj.description}</p>` : ""}
+                  </div>
+                `
+                  )
+                  .join("")}
+              </div>
+            </section>
+          `
+              : ""
+          }
+
+          ${
+            data.skills && data.skills.length
+              ? `
+            <section class="creative-section">
+              <h2>Skills & Expertise</h2>
+              <div class="skills-cloud">
+                ${data.skills
+                  .flatMap((skill) => (Array.isArray(skill.keywords) ? skill.keywords : []))
+                  .map((keyword) => `<span class="skill-pill">${keyword}</span>`)
+                  .join("")}
+              </div>
+            </section>
+          `
+              : ""
+          }
+
+          <div class="creative-footer">
+            ${data.basics?.email ? `<div class="footer-item">📧 ${data.basics.email}</div>` : ""}
+            ${data.basics?.phone ? `<div class="footer-item">📱 ${data.basics.phone}</div>` : ""}
+            ${data.basics?.location ? `<div class="footer-item">📍 ${data.basics.location}</div>` : ""}
+          </div>
         </div>
       `;
 
       const css = `
-        .resume-content.creative {
-          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        .resume-content.creative-portfolio {
+          font-family: 'Poppins', 'Segoe UI', sans-serif;
+          background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+          padding: 40px;
         }
-        .hero-section {
-          margin-bottom: 40px;
-          position: relative;
+        .creative-hero {
+          text-align: center;
+          margin-bottom: 50px;
+          background: white;
+          padding: 50px 40px;
+          border-radius: 16px;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
         }
-        .hero-section h1 {
-          font-size: 32px;
+        .hero-name {
+          font-size: 48px;
+          font-weight: 800;
           margin: 0 0 10px 0;
-          font-weight: 700;
-          letter-spacing: -0.5px;
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
         }
-        .tagline {
-          font-size: 14px;
+        .hero-title {
+          font-size: 20px;
           color: #666;
           margin: 0 0 15px 0;
-          letter-spacing: 1px;
-          text-transform: uppercase;
+          font-weight: 500;
+          letter-spacing: 0.5px;
         }
-        .accent-bar {
-          width: 60px;
-          height: 4px;
-          background: linear-gradient(90deg, #f59e0b, #ec4899);
-          margin-bottom: 20px;
+        .hero-bio {
+          font-size: 14px;
+          color: #555;
+          max-width: 600px;
+          margin: 0 auto;
+          line-height: 1.6;
         }
-        .creative-grid {
+        .stats-container {
           display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 40px;
-          margin-bottom: 30px;
+          grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+          gap: 20px;
+          margin-bottom: 50px;
+        }
+        .stat-card {
+          background: white;
+          padding: 25px;
+          border-radius: 12px;
+          text-align: center;
+          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+          transition: all 0.3s ease;
+        }
+        .stat-card:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 8px 25px rgba(102, 126, 234, 0.2);
+        }
+        .stat-number {
+          font-size: 32px;
+          font-weight: 800;
+          color: #667eea;
+        }
+        .stat-label {
+          font-size: 12px;
+          color: #999;
+          margin-top: 8px;
+          text-transform: uppercase;
+          letter-spacing: 1px;
         }
         .creative-section {
-          margin-bottom: 25px;
+          margin-bottom: 50px;
         }
         .creative-section h2 {
-          font-size: 14px;
+          font-size: 24px;
           font-weight: 700;
-          text-transform: uppercase;
-          letter-spacing: 2px;
-          margin: 0 0 15px 0;
-          padding-bottom: 0;
-          border: none;
+          margin: 0 0 30px 0;
+          color: #1a1a1a;
+          position: relative;
+          padding-bottom: 12px;
         }
-        .expertise-item {
+        .creative-section h2:after {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          width: 60px;
+          height: 4px;
+          background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+          border-radius: 2px;
+        }
+        .cards-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+          gap: 20px;
+        }
+        .experience-card, .education-card {
+          background: white;
+          padding: 25px;
+          border-radius: 12px;
+          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+          position: relative;
+          overflow: hidden;
+          transition: all 0.3s ease;
+        }
+        .experience-card:hover, .education-card:hover {
+          transform: translateY(-8px);
+          box-shadow: 0 12px 30px rgba(102, 126, 234, 0.15);
+        }
+        .card-accent {
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 4px;
+          background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        }
+        .card-accent-alt {
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 4px;
+          background: linear-gradient(90deg, #f59e0b 0%, #ec4899 100%);
+        }
+        .experience-card h3, .education-card h3 {
+          font-size: 15px;
+          font-weight: 700;
+          margin: 15px 0 8px 0;
+          color: #1a1a1a;
+        }
+        .card-company, .card-major, .card-school {
+          font-size: 12px;
+          color: #666;
+          margin: 4px 0;
+          font-weight: 500;
+        }
+        .card-date {
+          font-size: 11px;
+          color: #999;
+          margin-top: 10px;
+        }
+        .card-text {
+          font-size: 12px;
+          line-height: 1.5;
+          color: #555;
+          margin-top: 12px;
+        }
+        .projects-masonry {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+          gap: 20px;
+          grid-auto-flow: dense;
+        }
+        .project-card {
+          background: white;
+          padding: 20px;
+          border-radius: 12px;
+          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+          transition: all 0.3s ease;
+        }
+        .project-wide {
+          grid-column: span 2;
+        }
+        .project-card:hover {
+          transform: translateY(-6px);
+          box-shadow: 0 10px 25px rgba(102, 126, 234, 0.15);
+        }
+        .project-header {
           margin-bottom: 12px;
         }
-        .expertise-item h3 {
-          font-size: 12px;
-          margin: 0;
+        .project-card h3 {
+          font-size: 15px;
           font-weight: 700;
-        }
-        .keywords {
-          font-size: 11px;
-          color: #888;
-          margin-top: 3px;
-        }
-        .about-section p {
-          font-size: 12px;
-          line-height: 1.6;
-          color: #555;
-        }
-        .creative-entry {
-          margin-bottom: 15px;
-          padding-bottom: 15px;
-          border-bottom: 1px solid #eee;
-        }
-        .creative-entry:last-child {
-          border-bottom: none;
-        }
-        .entry-title {
-          display: flex;
-          justify-content: space-between;
-          align-items: flex-start;
-          gap: 10px;
-          margin-bottom: 5px;
-        }
-        .creative-entry h3 {
-          font-size: 13px;
           margin: 0;
-          font-weight: 700;
+          color: #1a1a1a;
         }
-        .entry-date {
-          font-size: 11px;
-          color: #999;
-          flex-shrink: 0;
-        }
-        .entry-company, .entry-institution {
+        .project-desc {
           font-size: 12px;
-          color: #888;
-          margin: 3px 0;
-        }
-        .entry-summary {
-          font-size: 11px;
           line-height: 1.5;
-          margin-top: 5px;
           color: #666;
+          margin: 0;
         }
-        .footer-info {
+        .skills-cloud {
           display: flex;
-          gap: 20px;
-          font-size: 11px;
-          color: #999;
-          padding-top: 20px;
-          border-top: 2px solid #eee;
+          flex-wrap: wrap;
+          gap: 12px;
+          background: white;
+          padding: 30px;
+          border-radius: 12px;
+          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+        .skill-pill {
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          color: white;
+          padding: 8px 16px;
+          border-radius: 20px;
+          font-size: 12px;
+          font-weight: 600;
+          transition: all 0.3s ease;
+        }
+        .skill-pill:hover {
+          transform: scale(1.05);
+          box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+        .creative-footer {
+          display: flex;
+          justify-content: center;
+          gap: 40px;
+          margin-top: 50px;
+          padding-top: 30px;
+          border-top: 2px solid rgba(0, 0, 0, 0.1);
+          flex-wrap: wrap;
+        }
+        .footer-item {
+          font-size: 13px;
+          color: #666;
+          font-weight: 500;
+        }
+        @media print {
+          .resume-content.creative-portfolio {
+            background: white;
+            padding: 20px;
+          }
+          .creative-hero {
+            box-shadow: none;
+            border: 1px solid #eee;
+          }
         }
       `;
 
@@ -1243,37 +1382,27 @@ const TEMPLATES = {
       };
 
       const html = `
-        <div class="resume-content executive">
-          <div class="exec-header">
-            <div class="header-left">
-              <h1>${data.basics?.name || "Your Name"}</h1>
-              <p class="exec-title">${data.basics?.label || "Executive"}</p>
-            </div>
-            <div class="header-right">
-              ${
-                data.basics?.email
-                  ? `<p><strong>Email:</strong> ${data.basics.email}</p>`
-                  : ""
-              }
-              ${
-                data.basics?.phone
-                  ? `<p><strong>Phone:</strong> ${data.basics.phone}</p>`
-                  : ""
-              }
-              ${
-                data.basics?.location
-                  ? `<p><strong>Location:</strong> ${data.basics.location}</p>`
-                  : ""
-              }
-            </div>
+        <div class="resume-content executive-formal">
+          <div class="formal-header">
+            <div class="header-divider">═══════════════════════════════════════════════════════════════</div>
+            <h1>${data.basics?.name || "YOUR NAME"}</h1>
+            <p class="formal-title">${(data.basics?.label || "EXECUTIVE").toUpperCase()}</p>
+            <div class="header-divider">═══════════════════════════════════════════════════════════════</div>
+          </div>
+
+          <div class="formal-contact">
+            ${data.basics?.email ? `<span>${data.basics.email}</span>` : ""}
+            ${data.basics?.phone ? `<span>•</span><span>${data.basics.phone}</span>` : ""}
+            ${data.basics?.location ? `<span>•</span><span>${data.basics.location}</span>` : ""}
           </div>
 
           ${
             data.basics?.summary
               ? `
-            <section class="exec-section">
-              <h2>Executive Summary</h2>
-              <p>${data.basics.summary}</p>
+            <section class="formal-section">
+              <h2>EXECUTIVE PROFILE</h2>
+              <div class="section-divider">───────────────────────────────────────────────────────────────</div>
+              <p class="formal-text">${data.basics.summary}</p>
             </section>
           `
               : ""
@@ -1282,21 +1411,18 @@ const TEMPLATES = {
           ${
             data.work && data.work.length
               ? `
-            <section class="exec-section">
-              <h2>Professional Experience</h2>
+            <section class="formal-section">
+              <h2>PROFESSIONAL HISTORY</h2>
+              <div class="section-divider">───────────────────────────────────────────────────────────────</div>
               ${data.work
                 .map(
                   (job) => `
-                <div class="exec-entry">
-                  <div class="exec-entry-title">
-                    <h3>${job.position || "Position"}</h3>
-                    <span>${job.name || "Company"}</span>
+                <div class="formal-entry">
+                  <div class="entry-header">
+                    <h3>${job.position || "Position"} | ${job.name || "Company"}</h3>
+                    <span class="entry-date">${formatDate(job.startDate, job.endDate)}</span>
                   </div>
-                  <p class="exec-entry-date">${formatDate(
-                    job.startDate,
-                    job.endDate
-                  )}</p>
-                  ${job.summary ? `<p>${job.summary}</p>` : ""}
+                  ${job.summary ? `<p class="formal-text">${job.summary}</p>` : ""}
                 </div>
               `
                 )
@@ -1306,147 +1432,213 @@ const TEMPLATES = {
               : ""
           }
 
-          <div class="exec-two-col">
-            ${
-              data.education && data.education.length
-                ? `
-              <section class="exec-section">
-                <h2>Education</h2>
-                ${data.education
-                  .map(
-                    (edu) => `
-                  <div class="exec-entry compact">
-                    <h3>${edu.studyType || "Degree"}</h3>
-                    <p>${edu.area || "Field"} • ${
-                      edu.institution || "Institution"
-                    }</p>
-                    <p class="exec-entry-date">${formatDate(
-                      edu.startDate,
-                      edu.endDate
-                    )}</p>
+          ${
+            data.education && data.education.length
+              ? `
+            <section class="formal-section">
+              <h2>ACADEMIC CREDENTIALS</h2>
+              <div class="section-divider">───────────────────────────────────────────────────────────────</div>
+              ${data.education
+                .map(
+                  (edu) => `
+                <div class="formal-entry compact">
+                  <div class="entry-header">
+                    <h3>${edu.studyType || "Degree"} in ${edu.area || "Field"}</h3>
+                    <span class="entry-date">${formatDate(edu.startDate, edu.endDate)}</span>
                   </div>
-                `
-                  )
-                  .join("")}
-              </section>
-            `
-                : ""
-            }
+                  <p class="institution">${edu.institution || "Institution"}</p>
+                </div>
+              `
+                )
+                .join("")}
+            </section>
+          `
+              : ""
+          }
 
-            ${
-              data.skills && data.skills.length
-                ? `
-              <section class="exec-section">
-                <h2>Core Competencies</h2>
+          ${
+            data.skills && data.skills.length
+              ? `
+            <section class="formal-section">
+              <h2>CORE COMPETENCIES</h2>
+              <div class="section-divider">───────────────────────────────────────────────────────────────</div>
+              <div class="competencies-grid">
                 ${data.skills
-                  .slice(0, 5)
                   .map(
                     (skill) => `
-                  <div class="exec-entry compact">
-                    <h3>${skill.name || "Skill"}</h3>
-                    <p>${
+                  <div class="competency-block">
+                    <strong>${skill.name || "Skill"}:</strong>
+                    <span>${
                       Array.isArray(skill.keywords)
-                        ? skill.keywords.slice(0, 2).join(", ")
-                        : ""
-                    }</p>
+                        ? skill.keywords.join(", ")
+                        : skill.keywords || ""
+                    }</span>
                   </div>
                 `
                   )
                   .join("")}
-              </section>
-            `
-                : ""
-            }
+              </div>
+            </section>
+          `
+              : ""
+          }
+
+          ${
+            data.projects && data.projects.length
+              ? `
+            <section class="formal-section">
+              <h2>KEY INITIATIVES</h2>
+              <div class="section-divider">───────────────────────────────────────────────────────────────</div>
+              ${data.projects
+                .map(
+                  (proj) => `
+                <div class="formal-entry compact">
+                  <h3>▸ ${proj.name || "Project"}</h3>
+                  ${proj.description ? `<p class="formal-text">${proj.description}</p>` : ""}
+                </div>
+              `
+                )
+                .join("")}
+            </section>
+          `
+              : ""
+          }
+
+          <div class="formal-footer">
+            ═══════════════════════════════════════════════════════════════
           </div>
         </div>
       `;
 
       const css = `
-        .resume-content.executive {
-          font-family: 'Georgia', serif;
-          color: #1f2937;
+        .resume-content.executive-formal {
+          font-family: 'Georgia', 'Times New Roman', serif;
+          color: #1a1a1a;
+          max-width: 850px;
+          margin: 0 auto;
         }
-        .exec-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: flex-start;
-          border-bottom: 3px solid #1e40af;
-          padding-bottom: 25px;
-          margin-bottom: 30px;
+        .formal-header {
+          text-align: center;
+          margin-bottom: 20px;
+          padding-bottom: 15px;
         }
-        .header-left h1 {
-          font-size: 32px;
-          margin: 0;
-          font-weight: 700;
-          color: #0d1b2a;
-        }
-        .exec-title {
-          font-size: 13px;
-          color: #1e40af;
-          margin: 5px 0 0 0;
-          letter-spacing: 1px;
-          text-transform: uppercase;
-        }
-        .header-right {
-          text-align: right;
+        .header-divider {
           font-size: 12px;
-        }
-        .header-right p {
-          margin: 3px 0;
-        }
-        .exec-section {
-          margin-bottom: 25px;
-        }
-        .exec-section h2 {
-          font-size: 13px;
-          font-weight: 700;
-          text-transform: uppercase;
+          color: #1a1a1a;
           letter-spacing: 2px;
-          margin: 0 0 15px 0;
-          padding-bottom: 0;
-          border: none;
-        }
-        .exec-section > p {
-          font-size: 12px;
-          line-height: 1.6;
-          margin: 0;
-        }
-        .exec-entry {
           margin-bottom: 12px;
         }
-        .exec-entry.compact {
-          margin-bottom: 8px;
+        .formal-header h1 {
+          font-size: 28px;
+          margin: 8px 0;
+          font-weight: 700;
+          letter-spacing: 3px;
         }
-        .exec-entry-title {
+        .formal-title {
+          font-size: 13px;
+          letter-spacing: 2px;
+          margin: 0;
+          font-weight: 600;
+          color: #333;
+        }
+        .formal-contact {
+          text-align: center;
+          font-size: 11px;
+          margin-bottom: 20px;
+          letter-spacing: 0.5px;
+        }
+        .formal-contact span {
+          margin: 0 4px;
+        }
+        .formal-section {
+          margin-bottom: 22px;
+        }
+        .formal-section h2 {
+          font-size: 12px;
+          font-weight: 700;
+          letter-spacing: 2px;
+          margin: 0 0 8px 0;
+          text-transform: uppercase;
+        }
+        .section-divider {
+          font-size: 11px;
+          color: #666;
+          letter-spacing: 1px;
+          margin-bottom: 12px;
+          display: block;
+        }
+        .formal-entry {
+          margin-bottom: 14px;
+          padding-bottom: 12px;
+          border-bottom: 1px solid #e0e0e0;
+        }
+        .formal-entry.compact {
+          margin-bottom: 10px;
+          padding-bottom: 8px;
+        }
+        .formal-entry:last-child {
+          border-bottom: none;
+        }
+        .entry-header {
           display: flex;
           justify-content: space-between;
           align-items: baseline;
           gap: 15px;
+          margin-bottom: 6px;
         }
-        .exec-entry h3 {
-          font-size: 12px;
+        .formal-entry h3 {
+          font-size: 11px;
           margin: 0;
           font-weight: 700;
+          flex: 1;
         }
-        .exec-entry-title span {
-          font-size: 11px;
-          color: #1e40af;
-          flex-shrink: 0;
+        .entry-date {
+          font-size: 10px;
+          color: #666;
+          white-space: nowrap;
+          font-weight: 500;
         }
-        .exec-entry-date {
+        .institution {
           font-size: 11px;
           color: #666;
-          margin: 2px 0 5px 0;
+          margin: 4px 0 0 0;
+          font-style: italic;
         }
-        .exec-entry p {
+        .formal-text {
           font-size: 11px;
-          margin: 3px 0;
-          line-height: 1.5;
+          line-height: 1.6;
+          color: #555;
+          margin: 6px 0 0 0;
         }
-        .exec-two-col {
+        .competencies-grid {
           display: grid;
           grid-template-columns: 1fr 1fr;
-          gap: 30px;
+          gap: 12px 20px;
+        }
+        .competency-block {
+          font-size: 10px;
+          line-height: 1.5;
+        }
+        .competency-block strong {
+          display: block;
+          font-weight: 700;
+          margin-bottom: 2px;
+        }
+        .competency-block span {
+          color: #666;
+        }
+        .formal-footer {
+          text-align: center;
+          font-size: 12px;
+          color: #1a1a1a;
+          letter-spacing: 2px;
+          margin-top: 20px;
+          padding-top: 15px;
+        }
+        @media print {
+          .resume-content.executive-formal {
+            background: white;
+          }
         }
       `;
 
@@ -1475,169 +1667,280 @@ const TEMPLATES = {
       };
 
       const html = `
-        <div class="resume-content compact">
-          <div class="compact-header">
+        <div class="resume-content swiss-grid">
+          <div class="swiss-header">
             <h1>${data.basics?.name || "Your Name"}</h1>
-            <div class="compact-meta">
-              <span>${data.basics?.label || "Professional"}</span>
-              ${data.basics?.email ? `<span>${data.basics.email}</span>` : ""}
-              ${data.basics?.phone ? `<span>${data.basics.phone}</span>` : ""}
-            </div>
+            <p class="swiss-title">${data.basics?.label || "Professional"}</p>
           </div>
 
-          <div class="compact-body">
-            ${
-              data.work && data.work.length
-                ? `
-              <div class="compact-section">
-                <div class="section-title">EXPERIENCE</div>
-                ${data.work
-                  .map(
-                    (job) => `
-                  <div class="compact-item">
-                    <div class="item-header">
-                      <strong>${job.position || "Position"}</strong>
-                      <span>${formatDate(job.startDate, job.endDate)}</span>
-                    </div>
-                    <div class="item-detail">${job.name || "Company"}</div>
-                    ${
-                      job.summary
-                        ? `<div class="item-desc">${job.summary}</div>`
-                        : ""
-                    }
-                  </div>
-                `
-                  )
-                  .join("")}
-              </div>
-            `
-                : ""
-            }
+          <div class="swiss-grid-layout">
+            <aside class="swiss-sidebar">
+              ${
+                data.basics?.email || data.basics?.phone || data.basics?.location
+                  ? `
+                <section class="swiss-box">
+                  <h3>Contact</h3>
+                  ${data.basics?.email ? `<p>📧 ${data.basics.email}</p>` : ""}
+                  ${data.basics?.phone ? `<p>📱 ${data.basics.phone}</p>` : ""}
+                  ${data.basics?.location ? `<p>📍 ${data.basics.location}</p>` : ""}
+                </section>
+              `
+                  : ""
+              }
 
-            ${
-              data.education && data.education.length
-                ? `
-              <div class="compact-section">
-                <div class="section-title">EDUCATION</div>
-                ${data.education
-                  .map(
-                    (edu) => `
-                  <div class="compact-item">
-                    <div class="item-header">
-                      <strong>${edu.studyType || "Degree"}</strong>
-                      <span>${formatDate(edu.startDate, edu.endDate)}</span>
-                    </div>
-                    <div class="item-detail">${edu.area || "Field"} • ${
-                      edu.institution || "Institution"
-                    }</div>
-                  </div>
-                `
-                  )
-                  .join("")}
-              </div>
-            `
-                : ""
-            }
-
-            ${
-              data.skills && data.skills.length
-                ? `
-              <div class="compact-section">
-                <div class="section-title">SKILLS</div>
-                <div class="compact-skills">
+              ${
+                data.skills && data.skills.length
+                  ? `
+                <section class="swiss-box">
+                  <h3>Skills</h3>
                   ${data.skills
                     .map(
                       (skill) => `
-                    <div class="compact-skill">
-                      <strong>${skill.name}</strong>: ${
-                        Array.isArray(skill.keywords)
-                          ? skill.keywords.join(", ")
-                          : skill.keywords || ""
-                      }
+                    <div class="skill-group">
+                      <h4>${skill.name}</h4>
+                      <div class="tags">
+                        ${
+                          Array.isArray(skill.keywords)
+                            ? skill.keywords
+                                .map((k) => `<span>${k}</span>`)
+                                .join("")
+                            : ""
+                        }
+                      </div>
                     </div>
                   `
                     )
                     .join("")}
-                </div>
-              </div>
-            `
-                : ""
-            }
+                </section>
+              `
+                  : ""
+              }
+            </aside>
+
+            <main class="swiss-main">
+              ${
+                data.basics?.summary
+                  ? `
+                <section class="swiss-block">
+                  <p class="swiss-summary">${data.basics.summary}</p>
+                </section>
+              `
+                  : ""
+              }
+
+              ${
+                data.work && data.work.length
+                  ? `
+                <section class="swiss-block">
+                  <h2>Experience</h2>
+                  <div class="timeline-grid">
+                    ${data.work
+                      .map(
+                        (job) => `
+                      <div class="timeline-entry">
+                        <div class="entry-date">${formatDate(job.startDate, job.endDate)}</div>
+                        <div class="entry-content">
+                          <h3>${job.position || "Position"}</h3>
+                          <p class="company">${job.name || "Company"}</p>
+                          ${job.summary ? `<p class="description">${job.summary}</p>` : ""}
+                        </div>
+                      </div>
+                    `
+                      )
+                      .join("")}
+                  </div>
+                </section>
+              `
+                  : ""
+              }
+
+              ${
+                data.education && data.education.length
+                  ? `
+                <section class="swiss-block">
+                  <h2>Education</h2>
+                  <div class="timeline-grid">
+                    ${data.education
+                      .map(
+                        (edu) => `
+                      <div class="timeline-entry">
+                        <div class="entry-date">${formatDate(edu.startDate, edu.endDate)}</div>
+                        <div class="entry-content">
+                          <h3>${edu.studyType || "Degree"} in ${edu.area || "Field"}</h3>
+                          <p class="institution">${edu.institution || "Institution"}</p>
+                        </div>
+                      </div>
+                    `
+                      )
+                      .join("")}
+                  </div>
+                </section>
+              `
+                  : ""
+              }
+
+              ${
+                data.projects && data.projects.length
+                  ? `
+                <section class="swiss-block">
+                  <h2>Projects</h2>
+                  ${data.projects
+                    .map(
+                      (proj) => `
+                    <div class="project-item">
+                      <h3>${proj.name}</h3>
+                      ${proj.description ? `<p>${proj.description}</p>` : ""}
+                    </div>
+                  `
+                    )
+                    .join("")}
+                </section>
+              `
+                  : ""
+              }
+            </main>
           </div>
         </div>
       `;
 
       const css = `
-        .resume-content.compact {
-          font-family: 'Arial', sans-serif;
-          color: #333;
+        .resume-content.swiss-grid {
+          font-family: 'Helvetica', 'Arial', sans-serif;
+          color: #222;
+          max-width: 900px;
+          margin: 0 auto;
         }
-        .compact-header {
-          margin-bottom: 20px;
+        .swiss-header {
+          margin-bottom: 30px;
+          padding-bottom: 20px;
+          border-bottom: 1px solid #000;
         }
-        .compact-header h1 {
-          font-size: 22px;
-          margin: 0 0 8px 0;
+        .swiss-header h1 {
+          font-size: 28px;
+          margin: 0;
           font-weight: 700;
+          letter-spacing: 0.5px;
         }
-        .compact-meta {
-          display: flex;
-          gap: 12px;
-          flex-wrap: wrap;
-          font-size: 11px;
-          color: #666;
-        }
-        .compact-body {
-          display: flex;
-          flex-direction: column;
-          gap: 12px;
-        }
-        .compact-section {
-          border-left: 3px solid #333;
-          padding-left: 12px;
-        }
-        .section-title {
-          font-size: 10px;
-          font-weight: 700;
+        .swiss-title {
+          font-size: 12px;
+          margin: 6px 0 0 0;
+          font-weight: 500;
           letter-spacing: 1px;
-          margin-bottom: 8px;
           text-transform: uppercase;
         }
-        .compact-item {
-          margin-bottom: 8px;
-          font-size: 11px;
+        .swiss-grid-layout {
+          display: grid;
+          grid-template-columns: 220px 1fr;
+          gap: 30px;
         }
-        .item-header {
+        .swiss-sidebar {
           display: flex;
-          justify-content: space-between;
-          gap: 10px;
+          flex-direction: column;
+          gap: 25px;
         }
-        .item-header strong {
+        .swiss-box {
+          padding: 15px;
+          background: #f5f5f5;
+          border: 1px solid #ddd;
+        }
+        .swiss-box h3 {
+          font-size: 11px;
           font-weight: 700;
+          margin: 0 0 12px 0;
+          letter-spacing: 1px;
+          text-transform: uppercase;
         }
-        .item-header span {
-          color: #999;
-          flex-shrink: 0;
-        }
-        .item-detail {
-          color: #666;
+        .swiss-box p {
           font-size: 10px;
-          margin-top: 1px;
-        }
-        .item-desc {
-          font-size: 10px;
-          margin-top: 3px;
+          margin: 6px 0;
           line-height: 1.4;
         }
-        .compact-skills {
-          display: grid;
-          gap: 5px;
+        .skill-group {
+          margin-bottom: 12px;
         }
-        .compact-skill {
+        .skill-group h4 {
           font-size: 10px;
+          margin: 0 0 6px 0;
+          font-weight: 600;
         }
-        .compact-skill strong {
+        .tags {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 4px;
+        }
+        .tags span {
+          font-size: 9px;
+          background: #e0e0e0;
+          padding: 2px 6px;
+          border: 1px solid #999;
+        }
+        .swiss-main {
+          padding-left: 0;
+        }
+        .swiss-block {
+          margin-bottom: 25px;
+        }
+        .swiss-summary {
+          font-size: 11px;
+          line-height: 1.6;
+          margin: 0;
+        }
+        .swiss-block h2 {
+          font-size: 11px;
           font-weight: 700;
+          margin: 0 0 12px 0;
+          letter-spacing: 1px;
+          text-transform: uppercase;
+          padding-bottom: 6px;
+          border-bottom: 1px solid #000;
+        }
+        .timeline-grid {
+          display: flex;
+          flex-direction: column;
+          gap: 15px;
+        }
+        .timeline-entry {
+          display: grid;
+          grid-template-columns: 80px 1fr;
+          gap: 15px;
+        }
+        .entry-date {
+          font-size: 10px;
+          font-weight: 600;
+          color: #666;
+        }
+        .entry-content h3 {
+          font-size: 11px;
+          margin: 0 0 3px 0;
+          font-weight: 700;
+        }
+        .company, .institution {
+          font-size: 10px;
+          color: #666;
+          margin: 0;
+          font-weight: 500;
+        }
+        .description {
+          font-size: 10px;
+          line-height: 1.4;
+          margin: 5px 0 0 0;
+          color: #555;
+        }
+        .project-item {
+          margin-bottom: 12px;
+          padding: 10px;
+          background: #f9f9f9;
+          border-left: 2px solid #000;
+        }
+        .project-item h3 {
+          font-size: 10px;
+          margin: 0 0 4px 0;
+          font-weight: 700;
+        }
+        .project-item p {
+          font-size: 9px;
+          margin: 0;
+          color: #666;
         }
       `;
 

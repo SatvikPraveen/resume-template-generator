@@ -852,173 +852,334 @@ const TEMPLATES = {
       };
 
       const html = `
-        <div class="resume-content tech">
-          <div class="tech-header">
-            <h1>${data.basics?.name || "Your Name"}</h1>
-            <code class="title-code">${data.basics?.label || "Developer"}</code>
-          </div>
-
-          <div class="tech-container">
-            <div class="code-block">
-              <div class="code-header">const profile = {</div>
-              <div class="code-content">
-                ${
-                  data.basics?.email
-                    ? `<div class="code-line"><span class="key">email:</span> <span class="value">"${data.basics.email}"</span>,</div>`
-                    : ""
-                }
-                ${
-                  data.basics?.phone
-                    ? `<div class="code-line"><span class="key">phone:</span> <span class="value">"${data.basics.phone}"</span>,</div>`
-                    : ""
-                }
-                ${
-                  data.basics?.location
-                    ? `<div class="code-line"><span class="key">location:</span> <span class="value">"${data.basics.location}"</span>,</div>`
-                    : ""
-                }
+        <div class="resume-content tech-terminal">
+          <div class="terminal-emulator">
+            <div class="terminal-header">
+              <div class="terminal-buttons">
+                <span class="btn-close"></span>
+                <span class="btn-minimize"></span>
+                <span class="btn-maximize"></span>
               </div>
-              <div class="code-footer">}</div>
+              <div class="terminal-title">Terminal</div>
             </div>
 
-            ${
-              data.skills && data.skills.length
-                ? `
-              <div class="code-block">
-                <div class="code-header">const skills = [</div>
-                <div class="code-content">
+            <div class="terminal-content">
+              <div class="terminal-line">
+                <span class="prompt">$</span>
+                <span class="command">./resume --version</span>
+              </div>
+              <div class="terminal-output">
+                <span class="output-text">${data.basics?.name || "Professional"} Resume v1.0</span>
+              </div>
+
+              <div class="terminal-line">
+                <span class="prompt">$</span>
+                <span class="command">cat profile.txt</span>
+              </div>
+              <div class="terminal-output">
+                <div class="output-line"><span class="label">Name:</span> ${data.basics?.name || "Your Name"}</div>
+                <div class="output-line"><span class="label">Title:</span> ${data.basics?.label ? data.basics.label.split('|')[0].trim() : "Professional"}</div>
+                ${data.basics?.email ? `<div class="output-line"><span class="label">Email:</span> ${data.basics.email}</div>` : ""}
+                ${data.basics?.phone ? `<div class="output-line"><span class="label">Phone:</span> ${data.basics.phone}</div>` : ""}
+              </div>
+
+              ${
+                data.work && data.work.length
+                  ? `
+                <div class="terminal-line">
+                  <span class="prompt">$</span>
+                  <span class="command">history --experience</span>
+                </div>
+                <div class="terminal-output">
+                  ${data.work
+                    .map(
+                      (job, idx) => `
+                    <div class="output-block">
+                      <div class="output-line highlight">[${idx + 1}] ${job.position || "Position"}</div>
+                      <div class="output-line"><span class="label">Duration:</span> ${formatDate(job.startDate, job.endDate)}</div>
+                      <div class="output-line indent">${(job.summary || "").substring(0, 150).replace(/\n/g, " ")}...</div>
+                    </div>
+                  `
+                    )
+                    .join("")}
+                </div>
+              `
+                  : ""
+              }
+
+              ${
+                data.education && data.education.length
+                  ? `
+                <div class="terminal-line">
+                  <span class="prompt">$</span>
+                  <span class="command">ls education/</span>
+                </div>
+                <div class="terminal-output">
+                  ${data.education
+                    .map(
+                      (edu) => `
+                    <div class="output-line">
+                      <span class="file-icon">📚</span> ${edu.studyType || "Degree"} - ${edu.area || "Field"} (${edu.institution || "Institution"})
+                    </div>
+                  `
+                    )
+                    .join("")}
+                </div>
+              `
+                  : ""
+              }
+
+              ${
+                data.skills && data.skills.length
+                  ? `
+                <div class="terminal-line">
+                  <span class="prompt">$</span>
+                  <span class="command">cat skills.conf</span>
+                </div>
+                <div class="terminal-output">
                   ${data.skills
                     .map(
                       (skill) => `
-                    <div class="code-line">
-                      <span class="code-obj">{</span>
-                      <span class="key">name:</span> <span class="value">"${
-                        skill.name
-                      }"</span>,
-                      <span class="key">technologies:</span> [<span class="value">${
-                        Array.isArray(skill.keywords)
-                          ? skill.keywords
-                              .slice(0, 3)
-                              .map((k) => `"${k}"`)
-                              .join(", ")
-                          : ""
-                      }</span>]
-                      <span class="code-obj">},</span>
+                    <div class="output-line">
+                      <span class="label">[${skill.name}]</span>
+                      <span class="value">${
+                        Array.isArray(skill.keywords) ? skill.keywords.join(", ") : skill.keywords || ""
+                      }</span>
                     </div>
                   `
                     )
                     .join("")}
                 </div>
-                <div class="code-footer">]</div>
-              </div>
-            `
-                : ""
-            }
+              `
+                  : ""
+              }
 
-            ${
-              data.work && data.work.length
-                ? `
-              <div class="code-block">
-                <div class="code-header">const experience = [</div>
-                <div class="code-content">
-                  ${data.work
+              ${
+                data.projects && data.projects.length
+                  ? `
+                <div class="terminal-line">
+                  <span class="prompt">$</span>
+                  <span class="command">find . -name "projects" -type d</span>
+                </div>
+                <div class="terminal-output">
+                  ${data.projects
                     .map(
-                      (job) => `
-                    <div class="code-line">
-                      <span class="code-obj">{</span>
-                      <span class="key">position:</span> <span class="value">"${
-                        job.position
-                      }"</span>,
-                      <span class="key">company:</span> <span class="value">"${
-                        job.name
-                      }"</span>,
-                      <span class="key">duration:</span> <span class="value">"${formatDate(
-                        job.startDate,
-                        job.endDate
-                      )}"</span>
-                      <span class="code-obj">},</span>
+                      (proj, idx) => `
+                    <div class="output-block">
+                      <div class="output-line highlight">./projects/${proj.name}</div>
+                      <div class="output-line"><span class="label">tech:</span> ${
+                        Array.isArray(proj.keywords) ? proj.keywords.join(", ") : proj.keywords || ""
+                      }</div>
+                      <div class="output-line indent">${(proj.summary || "").substring(0, 120).replace(/\n/g, " ")}...</div>
                     </div>
                   `
                     )
                     .join("")}
                 </div>
-                <div class="code-footer">]</div>
+              `
+                  : ""
+              }
+
+              <div class="terminal-line">
+                <span class="prompt">$</span>
+                <span class="blink">_</span>
               </div>
-            `
-                : ""
-            }
+            </div>
           </div>
         </div>
       `;
 
       const css = `
-        .resume-content.tech {
-          font-family: 'Courier New', monospace;
-          background: #1e1e1e;
-          color: #d4d4d4;
-          padding: 30px;
+        .resume-content.tech-terminal {
+          background: #0d1117;
+          color: #39ff14;
+          font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+          padding: 20px;
+          min-height: 100vh;
+        }
+
+        .terminal-emulator {
+          background: #0d1117;
+          border: 2px solid #39ff14;
           border-radius: 8px;
-        }
-        .tech-header {
-          margin-bottom: 30px;
-          border-bottom: 2px solid #0ea5e9;
-          padding-bottom: 20px;
-        }
-        .tech-header h1 {
-          font-size: 28px;
-          margin: 0 0 10px 0;
-          color: #0ea5e9;
-          font-weight: 700;
-        }
-        .title-code {
-          font-size: 12px;
-          color: #a0aec0;
-          background: rgba(14, 165, 233, 0.1);
-          padding: 4px 8px;
-          border-radius: 3px;
-          display: inline-block;
-        }
-        .code-block {
-          background: #252526;
-          border-left: 3px solid #0ea5e9;
-          margin-bottom: 20px;
-          border-radius: 4px;
+          box-shadow: 0 0 20px rgba(57, 255, 20, 0.3), inset 0 0 20px rgba(57, 255, 20, 0.05);
           overflow: hidden;
         }
-        .code-header {
-          background: #1e1e1e;
-          padding: 10px 15px;
+
+        .terminal-header {
+          background: #161b22;
+          border-bottom: 1px solid #39ff14;
+          padding: 8px 12px;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+
+        .terminal-buttons {
+          display: flex;
+          gap: 6px;
+        }
+
+        .terminal-buttons span {
+          width: 12px;
+          height: 12px;
+          border-radius: 50%;
+          display: inline-block;
+        }
+
+        .btn-close {
+          background: #ff6b6b;
+        }
+
+        .btn-minimize {
+          background: #ffd93d;
+        }
+
+        .btn-maximize {
+          background: #6bcf7f;
+        }
+
+        .terminal-title {
           font-size: 12px;
-          color: #ce9178;
-          font-weight: 700;
+          margin-left: 10px;
+          color: #39ff14;
+          flex: 1;
+          text-align: center;
         }
-        .code-content {
-          padding: 15px;
-          font-size: 11px;
-          line-height: 1.8;
+
+        .terminal-content {
+          padding: 20px;
+          font-size: 13px;
+          line-height: 1.6;
+          max-height: 80vh;
+          overflow-y: auto;
         }
-        .code-line {
+
+        .terminal-content::-webkit-scrollbar {
+          width: 8px;
+        }
+
+        .terminal-content::-webkit-scrollbar-track {
+          background: #161b22;
+        }
+
+        .terminal-content::-webkit-scrollbar-thumb {
+          background: #39ff14;
+          border-radius: 4px;
+        }
+
+        .terminal-line {
           display: flex;
           gap: 8px;
-          flex-wrap: wrap;
-          margin-bottom: 8px;
+          margin-bottom: 12px;
+          align-items: center;
         }
-        .key {
-          color: #9cdcfe;
+
+        .prompt {
+          color: #39ff14;
+          font-weight: bold;
+          min-width: 20px;
         }
-        .value {
-          color: #ce9178;
+
+        .command {
+          color: #39ff14;
+          text-decoration: underline;
         }
-        .code-obj {
-          color: #d4d4d4;
+
+        .blink {
+          animation: blink 1s infinite;
+          color: #39ff14;
         }
-        .code-footer {
-          padding: 10px 15px;
-          background: #1e1e1e;
+
+        @keyframes blink {
+          0%, 49% { opacity: 1; }
+          50%, 100% { opacity: 0; }
+        }
+
+        .terminal-output {
+          margin-left: 28px;
+          margin-bottom: 16px;
+          padding-left: 12px;
+          border-left: 2px solid rgba(57, 255, 20, 0.3);
+        }
+
+        .output-line {
+          color: #39ff14;
+          margin-bottom: 6px;
+          word-break: break-word;
+        }
+
+        .output-line.highlight {
+          color: #00ffff;
+          font-weight: bold;
+        }
+
+        .output-line.indent {
+          margin-left: 20px;
+          color: #90ee90;
           font-size: 12px;
-          color: #ce9178;
-          font-weight: 700;
-          border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .output-block {
+          margin-bottom: 10px;
+          padding-bottom: 8px;
+          border-bottom: 1px solid rgba(57, 255, 20, 0.2);
+        }
+
+        .output-text {
+          color: #00ffff;
+          font-weight: bold;
+        }
+
+        .label {
+          color: #39ff14;
+          font-weight: bold;
+        }
+
+        .value {
+          color: #00ffff;
+        }
+
+        .file-icon {
+          margin-right: 6px;
+        }
+
+        @media print {
+          .resume-content.tech-terminal {
+            background: white;
+            color: #000;
+          }
+
+          .terminal-emulator {
+            border: 1px solid #000;
+            box-shadow: none;
+          }
+
+          .terminal-header {
+            border-bottom-color: #000;
+          }
+
+          .terminal-content {
+            max-height: none;
+          }
+
+          .prompt,
+          .command,
+          .blink,
+          .terminal-output,
+          .output-text,
+          .output-line,
+          .output-line.highlight,
+          .output-line.indent,
+          .label,
+          .value,
+          .terminal-title {
+            color: #000;
+          }
+
+          .terminal-emulator {
+            background: white;
+          }
         }
       `;
 

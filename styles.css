@@ -787,6 +787,15 @@ body {
   }
 }
 
+/* ==================== PREVIEW SECTION - HIDE HEADER & BUTTONS ==================== */
+.preview-section .section-header {
+  display: none !important;
+}
+
+.preview-section .action-btns {
+  display: none !important;
+}
+
 /* ==================== PRINT STYLES ==================== */
 @media print {
   .header,

@@ -439,12 +439,13 @@ function extractURL(text) {
 function extractLocation(text) {
   // Look for location in the FIRST 10 lines only (header section)
   // This avoids matching locations from education/work experience sections
-  const lines = text.split('\n').slice(0, 10).join('\n');
-  
+  const lines = text.split("\n").slice(0, 10).join("\n");
+
   // Look for city, state/country patterns
   // But exclude patterns like "Computer Science Chicago" (degree field with city)
   // We're looking for just "City, State" patterns in contact info
-  const locationRegex = /(?<![\s\w])([A-Z][a-z]+),\s*([A-Z]{2}|[A-Z][a-z]+)(?![a-z])/;
+  const locationRegex =
+    /(?<![\s\w])([A-Z][a-z]+),\s*([A-Z]{2}|[A-Z][a-z]+)(?![a-z])/;
   const match = lines.match(locationRegex);
   return match ? match[0] : "";
 }
@@ -975,56 +976,82 @@ function parseProjects(text) {
 
   const projects = [];
 
-  // Split projects by looking for "Project Name | Tech1, Tech2" pattern
-  // followed by bullet points with description
+  // Strategy: Split text into sections by finding project headers
+  // Project header format: "Project Name | tech1, tech2"
+  // The key is to ONLY capture techs on the SAME line as the pipe, not beyond first newline
+  // Don't use ^ anchor - projects might not start at beginning of line in PDF text
 
-  // First, split by the project pattern: "Capital Words | techs"
-  const projectPattern =
-    /([A-Z][A-Za-z0-9\s\-&()]+?)\s*\|\s*([^•\n]+?)(?=•|[A-Z][A-Za-z0-9\s\-&()]+?\s*\||$)/g;
+  const headerPattern = /([A-Z][A-Za-z0-9\s\-&()]+?)\s*\|\s*([^\n]*)(?=\n|$)/g;
 
-  let match;
-  const matches = [];
+  let headerMatch;
+  const headers = [];
 
-  while ((match = projectPattern.exec(text)) !== null) {
-    matches.push({
-      name: match[1].trim(),
-      techs: match[2].trim(),
-      index: match.index,
-      endIndex: match.index + match[0].length,
+  while ((headerMatch = headerPattern.exec(text)) !== null) {
+    headers.push({
+      name: headerMatch[1].trim(),
+      techsRaw: headerMatch[2].trim(),
+      index: headerMatch.index,
+      matchLength: headerMatch[0].length,
     });
   }
 
-  // Now extract descriptions between projects
-  for (let i = 0; i < matches.length; i++) {
-    const currentMatch = matches[i];
-    const nextMatch = matches[i + 1];
+  console.log(`[parseProjects] Found ${headers.length} project headers`);
 
-    // Extract technologies (before any bullet point)
-    let techText = currentMatch.techs;
-    if (techText.includes("•")) {
-      techText = techText.substring(0, techText.indexOf("•")).trim();
+  // For each header, extract techs and description
+    for (let i = 0; i < headers.length; i++) {
+      const header = headers[i];
+
+      // Extract techs from the header line (between | and end of line, or until bullet)
+      let techs = header.techsRaw;
+      let description = "";    // IMPORTANT: techs might contain bullet on same line OR newline separates techs from description
+    // Handle bullet on same line first
+    if (techs.includes("•")) {
+      const bulletIndex = techs.indexOf("•");
+      // Text before bullet = techs, after = description start
+      techs = techs.substring(0, bulletIndex).trim();
+      // Description starts after the bullet
+      let restOfDescription = header.techsRaw.substring(bulletIndex);
+
+      // Get text from end of header line to start of next project or end
+      const headerEnd = header.index + header.matchLength;
+      const nextHeaderIndex =
+        i + 1 < headers.length ? headers[i + 1].index : text.length;
+      const fullDescription = text.substring(headerEnd, nextHeaderIndex).trim();
+
+      description =
+        restOfDescription + (fullDescription ? "\n" + fullDescription : "");
+    } else {
+      // No bullet in header line - description is everything after this header until next project
+      const headerEnd = header.index + header.matchLength;
+      const nextHeaderIndex =
+        i + 1 < headers.length ? headers[i + 1].index : text.length;
+      description = text.substring(headerEnd, nextHeaderIndex).trim();
     }
 
-    const keywords = techText
+    // Parse techs into keywords array - split by comma/semicolon, filter out descriptions
+    const keywords = techs
       .split(/[,;]/)
       .map((s) => s.trim())
-      .filter((s) => s.length > 0 && !/^•/.test(s) && s !== "•");
+      .filter((s) => {
+        // Filter: non-empty, no bullets, no newlines, not just whitespace
+        if (!s || s === "•" || /[\n]/.test(s) || /^[\s]*$/.test(s))
+          return false;
+        return true;
+      });
 
-    // Extract description: from end of current match to start of next match (or end of text)
-    let descStart = currentMatch.endIndex;
-    let descEnd = nextMatch ? nextMatch.index : text.length;
-    let description = text.substring(descStart, descEnd).trim();
-
-    // Clean up description
+    // Clean description - remove bullets, collapse whitespace
     description = description
-      .replace(/^•\s*/gm, "") // Remove bullet points
-      .replace(/\s+/g, " ") // Collapse spaces
+      .split("\n")
+      .map((line) => line.replace(/^•\s*/, "").trim())
+      .filter((line) => line.length > 0)
+      .join(" ")
+      .replace(/\s+/g, " ")
       .trim();
 
-    // Only add if we have a name and either keywords or description
-    if (currentMatch.name && (keywords.length > 0 || description.length > 0)) {
+    // Add project
+    if (header.name && (keywords.length > 0 || description.length > 0)) {
       projects.push({
-        name: currentMatch.name,
+        name: header.name,
         keywords: keywords,
         summary: description,
       });

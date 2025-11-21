@@ -2092,13 +2092,21 @@ const TEMPLATES = {
           <header class="zen-header">
             <h1>${data.basics?.name || "Your Name"}</h1>
             <p class="zen-title">${data.basics?.label || "Professional"}</p>
-            ${data.basics?.summary ? `<p class="zen-intro">${data.basics.summary}</p>` : ""}
+            ${
+              data.basics?.summary
+                ? `<p class="zen-intro">${data.basics.summary}</p>`
+                : ""
+            }
           </header>
 
           <div class="zen-contact">
             ${data.basics?.email ? `<span>${data.basics.email}</span>` : ""}
             ${data.basics?.phone ? `<span>${data.basics.phone}</span>` : ""}
-            ${data.basics?.location ? `<span>${data.basics.location}</span>` : ""}
+            ${
+              data.basics?.location
+                ? `<span>${data.basics.location}</span>`
+                : ""
+            }
           </div>
 
           ${
@@ -2135,7 +2143,9 @@ const TEMPLATES = {
                   (edu) => `
                 <div class="zen-entry">
                   <div class="zen-entry-header">
-                    <h3>${edu.studyType || "Degree"} in ${edu.area || "Field"}</h3>
+                    <h3>${edu.studyType || "Degree"} in ${
+                    edu.area || "Field"
+                  }</h3>
                     <span>${formatDate(edu.startDate, edu.endDate)}</span>
                   </div>
                   <p class="zen-company">${edu.institution || "Institution"}</p>
@@ -2184,7 +2194,11 @@ const TEMPLATES = {
                   (proj) => `
                 <div class="zen-entry">
                   <h3>${proj.name}</h3>
-                  ${proj.description ? `<p class="zen-text">${proj.description}</p>` : ""}
+                  ${
+                    proj.description
+                      ? `<p class="zen-text">${proj.description}</p>`
+                      : ""
+                  }
                 </div>
               `
                 )

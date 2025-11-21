@@ -32,35 +32,39 @@ Phase 3: Advanced Features (Future)
 
 ## 📚 Documentation You Have
 
-| File | Purpose | Read When |
-|------|---------|-----------|
-| **00_PHASE_2_SUMMARY.md** | Executive overview | Starting implementation |
-| **TEMPLATE_ENHANCEMENT_IMPLEMENTATION.md** | Detailed specs for each template | Implementing each template |
-| **PHASE_2_READY_TO_BEGIN.md** | Timeline & strategy | Planning your work |
-| **TEMPLATE_ENHANCEMENT_STRATEGY.md** | Design inspiration + ASCII mockups | Need design ideas |
-| **PHASE_2_TEMPLATE_STYLING.md** | Architecture & constraints | Understanding limitations |
+| File                                       | Purpose                            | Read When                  |
+| ------------------------------------------ | ---------------------------------- | -------------------------- |
+| **00_PHASE_2_SUMMARY.md**                  | Executive overview                 | Starting implementation    |
+| **TEMPLATE_ENHANCEMENT_IMPLEMENTATION.md** | Detailed specs for each template   | Implementing each template |
+| **PHASE_2_READY_TO_BEGIN.md**              | Timeline & strategy                | Planning your work         |
+| **TEMPLATE_ENHANCEMENT_STRATEGY.md**       | Design inspiration + ASCII mockups | Need design ideas          |
+| **PHASE_2_TEMPLATE_STYLING.md**            | Architecture & constraints         | Understanding limitations  |
 
 ---
 
 ## 🔧 Implementation Steps
 
 ### Step 1: Pick Your Starting Template
+
 - **Easiest:** Tech template (monospace, simple structure)
 - **Most Impact:** Modern template (complete restructure)
 - **Recommendation:** Start with Tech for quick win
 
 ### Step 2: Reference the Implementation Guide
+
 - Open: `TEMPLATE_ENHANCEMENT_IMPLEMENTATION.md`
 - Find your template section (e.g., "1. TECH Template (Line 834)")
 - Read: Structural Changes, CSS Elements, HTML Structure
 
 ### Step 3: Modify templates.js
+
 - Line 834 (Tech), 250 (Modern), 1832 (Dark), etc.
 - Edit the template's `render()` function
 - Update HTML structure
 - Update CSS styling
 
 ### Step 4: Test Immediately
+
 - Refresh browser (http://localhost:8000)
 - Upload `shanmuga-priya-resume.pdf`
 - Select your enhanced template
@@ -68,6 +72,7 @@ Phase 3: Advanced Features (Future)
 - Check visual quality
 
 ### Step 5: Commit & Move On
+
 ```bash
 git add templates.js
 git commit -m "Enhance: Tech template - add CLI aesthetic styling"
@@ -112,6 +117,7 @@ After implementing each template, verify:
 ## 🎨 Template Priorities
 
 ### Week 1: High-Impact (Do First)
+
 1. **Tech** - Terminal/CLI (2h)
 2. **Dark** - Cyberpunk (3h)
 3. **Modern** - Sidebar (3h)
@@ -119,9 +125,11 @@ After implementing each template, verify:
 5. **Executive** - Formal corporate (2h)
 
 ### Week 2: Medium (Complete These)
+
 6-9: Classic, Academic, Corporate, Compact (4h total)
 
 ### Week 3: Style Variations (Polish)
+
 10-12: Minimal, Colorful, ATS (3h total)
 
 ---
@@ -136,19 +144,19 @@ templateName: {
   render: (data) => {
     // Date helper (copy from another template)
     const formatDate = (start, end) => { /* ... */ };
-    
+
     // Your unique HTML layout
     const html = `
       <div class="resume-content">
         <!-- Your template-specific HTML here -->
       </div>
     `;
-    
+
     // Your unique CSS styling
     const css = `
       .resume-content { /* your styles */ }
     `;
-    
+
     return { html, css };
   }
 }
@@ -177,6 +185,7 @@ ONLY CHANGE:
 ## 🚀 Start Now
 
 ### Option A: Guided Start (Recommended)
+
 1. Read `TEMPLATE_ENHANCEMENT_IMPLEMENTATION.md`
 2. Find "1. TECH Template (Line 834)" section
 3. Copy the HTML structure example
@@ -186,6 +195,7 @@ ONLY CHANGE:
 7. Repeat for next template
 
 ### Option B: Solo Start
+
 1. Know Tech template is at line 834
 2. Refer to TEMPLATE_ENHANCEMENT_IMPLEMENTATION.md for inspiration
 3. Write your own HTML/CSS structure
@@ -258,7 +268,7 @@ A: Helpful but not required. Refer to TEMPLATE_ENHANCEMENT_IMPLEMENTATION.md as 
 
 ---
 
-## 🎯 Success = 
+## 🎯 Success =
 
 When you're done:
 

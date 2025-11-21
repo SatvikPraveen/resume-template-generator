@@ -11,10 +11,12 @@ This guide details the structural changes needed for each template to make them 
 ## Template-by-Template Enhancement Plan
 
 ### 1. TECH Template (Line 834)
+
 **Current State:** Basic layout with tech colors  
 **Real-World Inspiration:** GitHub/Developer Platform (CLI aesthetic)
 
 #### Structural Changes
+
 ```
 NEW LAYOUT:
 ┌─────────────────────────────────┐
@@ -40,6 +42,7 @@ NEW LAYOUT:
 ```
 
 #### CSS Elements to Add
+
 - Monospace font: `font-family: 'Courier New', monospace`
 - Dark background: `#0d1117`
 - Neon green text: `#39ff14` or `#00ff00`
@@ -50,6 +53,7 @@ NEW LAYOUT:
 - Blinking cursor effect (subtle)
 
 #### HTML Structure
+
 - Wrap in `.terminal-emulator` div
 - Use `<pre>` for code sections
 - Add `$` and `>` prompts before section headers
@@ -59,10 +63,12 @@ NEW LAYOUT:
 ---
 
 ### 2. DARK Template (Line 1832)
+
 **Current State:** Dark background with minimal contrast  
 **Real-World Inspiration:** Cyberpunk/Hacker aesthetic
 
 #### Structural Changes
+
 ```
 NEW LAYOUT:
 ╔═════════════════════════════════╗
@@ -85,6 +91,7 @@ NEW LAYOUT:
 ```
 
 #### CSS Elements to Add
+
 - Nested borders: Multiple `border` layers
 - Neon accents: Cyan `#00ffff`, Magenta `#ff00ff`, Green `#00ff00`
 - Progress bars: ASCII-style `▓▒░` or CSS `linear-gradient`
@@ -96,6 +103,7 @@ NEW LAYOUT:
 - Status indicators: `[ACTIVE]`, `[INDEXED]`
 
 #### HTML Structure
+
 - `.cyberpunk-container` wrapper
 - `.data-section` for each major area
 - `.connection-status` elements
@@ -106,10 +114,12 @@ NEW LAYOUT:
 ---
 
 ### 3. MODERN Template (Line 250)
+
 **Current State:** Two-column layout exists but needs enhancement  
 **Real-World Inspiration:** Design Studio Portfolio (sidebar focus)
 
 #### Structural Changes
+
 ```
 NEW LAYOUT:
 ┌──────────────────────────────────────────┐
@@ -148,6 +158,7 @@ NEW LAYOUT:
 ```
 
 #### CSS Elements to Add
+
 - True 2-column layout: `.sidebar` + `.main-content`
 - Sidebar width: 28-30%
 - Colored sidebar background: accent color (accent: #3498db or similar)
@@ -160,6 +171,7 @@ NEW LAYOUT:
 - Sticky header for sidebar (optional)
 
 #### HTML Structure
+
 - Restructure into true 2-column grid
 - Move education to sidebar
 - Reorganize skills on sidebar with categories
@@ -170,10 +182,12 @@ NEW LAYOUT:
 ---
 
 ### 4. CREATIVE Template (Line 551)
+
 **Current State:** Basic layout with creative colors  
 **Real-World Inspiration:** Behance Portfolio (card-based, hero sections)
 
 #### Structural Changes
+
 ```
 NEW LAYOUT:
 ┌─────────────────────────────────────────┐
@@ -219,6 +233,7 @@ NEW LAYOUT:
 ```
 
 #### CSS Elements to Add
+
 - Card-based layout with `.card` class
 - Hero section at top: Large, centered, prominent
 - Statistics cards: 2-3 key metrics
@@ -232,6 +247,7 @@ NEW LAYOUT:
 - Spacing: Generous padding/margins between sections
 
 #### HTML Structure
+
 - `.creative-hero` section at top
 - `.stats-row` with key metrics
 - `.card` wrapper for each entry
@@ -243,10 +259,12 @@ NEW LAYOUT:
 ---
 
 ### 5. EXECUTIVE Template (Line 1029)
+
 **Current State:** Formal layout  
 **Real-World Inspiration:** Corporate Annual Report (formal, prestigious)
 
 #### Structural Changes
+
 ```
 NEW LAYOUT:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -325,6 +343,7 @@ NOTABLE PROJECTS [5 Completed]
 ```
 
 #### CSS Elements to Add
+
 - Formal typography: Serif fonts (Georgia, Times)
 - Decorative lines: `border-top/bottom` with `━` or solid lines
 - Section separators: Horizontal rules between sections
@@ -338,6 +357,7 @@ NOTABLE PROJECTS [5 Completed]
 - Conservative font sizes and weights
 
 #### HTML Structure
+
 - `.executive-header` with formal title
 - `.executive-summary` section prominent
 - `.section-separator` lines between sections
@@ -350,10 +370,12 @@ NOTABLE PROJECTS [5 Completed]
 ---
 
 ### 6. CLASSIC Template (Line 2)
+
 **Current State:** Simple, clean layout  
 **Real-World Inspiration:** LinkedIn Professional style
 
 #### Enhancements
+
 - **Current:** Already fairly professional
 - **Enhance:** Add more visual hierarchy
 - **Changes:**
@@ -367,10 +389,12 @@ NOTABLE PROJECTS [5 Completed]
 ---
 
 ### 7. MINIMAL Template (Line 1452)
+
 **Current State:** Basic minimal layout  
 **Real-World Inspiration:** Japanese Zen aesthetic
 
 #### Structural Changes
+
 ```
 NEW LAYOUT:
 
@@ -425,6 +449,7 @@ Analyzed app store data for trends
 ```
 
 #### CSS Elements
+
 - Extreme whitespace: Large margins and padding
 - Minimalist typography: Sans-serif, generous line-height
 - No color: Pure grayscale (white, grays, black)
@@ -438,10 +463,12 @@ Analyzed app store data for trends
 ---
 
 ### 8. COLORFUL Template (Line 1625)
+
 **Current State:** Color-based design  
 **Real-World Inspiration:** Vibrant Creative Carnival
 
 #### Structural Changes
+
 - **Multi-color scheme:** Different colors for each section
 - **Background blocks:** Each section has background color
 - **Skill bubbles:** Circular badges with different colors
@@ -453,10 +480,12 @@ Analyzed app store data for trends
 ---
 
 ### 9. COMPACT Template (Line 1261)
+
 **Current State:** Dense layout  
 **Real-World Inspiration:** Swiss Grid Design
 
 #### Structural Changes
+
 - **Rigid grid:** Strict alignment and spacing
 - **Bullet points:** Extensive use for brevity
 - **Columns:** 2-3 column layout
@@ -469,10 +498,12 @@ Analyzed app store data for trends
 ---
 
 ### 10. ATS-FRIENDLY Template (Line 2049)
+
 **Current State:** Meant to be searchable  
 **Real-World Inspiration:** Government Form style
 
 #### Structural Changes
+
 ```
 NEW LAYOUT:
 
@@ -533,6 +564,7 @@ Date: [When completed]
 ```
 
 #### CSS Elements
+
 - Pure semantic HTML: No special styling
 - Black text on white background
 - Consistent font: Monospace or Arial (ATS-friendly)
@@ -547,10 +579,12 @@ Date: [When completed]
 ---
 
 ### 11. ACADEMIC Template (Line 2190)
+
 **Current State:** CV-like layout  
 **Real-World Inspiration:** University CV format
 
 #### Structural Changes
+
 ```
 NEW LAYOUT:
 
@@ -625,6 +659,7 @@ Available upon request
 ```
 
 #### CSS Elements
+
 - Academic layout: Traditional CV format
 - Serif or monospace fonts
 - Clean structure with clear sections
@@ -638,10 +673,12 @@ Available upon request
 ---
 
 ### 12. CORPORATE Template (Line 2397)
+
 **Current State:** Corporate layout  
 **Real-World Inspiration:** Fortune 500 Company Profile
 
 #### Structural Changes
+
 ```
 NEW LAYOUT:
 
@@ -709,6 +746,7 @@ Portfolio:
 ```
 
 #### CSS Elements
+
 - Corporate grid design: Rigid structure
 - Box borders: Professional `border` styling
 - Tree structure: ASCII-like organizational layout
@@ -725,7 +763,9 @@ Portfolio:
 ## Implementation Priority
 
 ### Phase 1: Maximum Impact (Start Here)
+
 These templates need most differentiation:
+
 1. **Tech** - Terminal/CLI style (most different)
 2. **Dark** - Cyberpunk/nested (most different)
 3. **Modern** - Proper sidebar layout (most impactful)
@@ -733,12 +773,14 @@ These templates need most differentiation:
 5. **Executive** - Formal structure (significantly different)
 
 ### Phase 2: Medium Enhancement
+
 6. **Classic** - Enhanced LinkedIn style
 7. **Academic** - Traditional CV format
 8. **Corporate** - Organizational layout
 9. **Compact** - Swiss grid design
 
 ### Phase 3: Color/Style Variations
+
 10. **Minimal** - Zen whitespace
 11. **Colorful** - Vibrant carnival
 12. **ATS-Friendly** - Plain text form
@@ -755,26 +797,27 @@ templateName: {
   render: (data) => {
     // Date formatting helper (reusable)
     const formatDate = (start, end) => { /* ... */ };
-    
+
     // HTML generation from data
     const html = `
       <div class="resume-content">
         <!-- Template-specific HTML -->
       </div>
     `;
-    
+
     // CSS styling (scoped to .resume-content and children)
     const css = `
       .resume-content { /* ... */ }
       /* All styles here */
     `;
-    
+
     return { html, css };
   }
 }
 ```
 
-**Important:** 
+**Important:**
+
 - Each template independently consumes the same `data` object
 - HTML structure can vary completely
 - CSS is scoped within the template's `css` string
@@ -842,6 +885,7 @@ Each template receives this structure:
 ## CSS Scoping Strategy
 
 Each template's CSS is injected into a style tag and should be:
+
 - Scoped to `.resume-content` class
 - Use specific selectors to avoid conflicts
 - Include responsive media queries
@@ -849,15 +893,16 @@ Each template's CSS is injected into a style tag and should be:
 - Use relative units (em, rem) where possible
 
 Example:
+
 ```css
 .resume-content {
   font-family: ...;
 }
 .resume-content .resume-header {
-  ...
+  ...;
 }
 .resume-content .resume-section {
-  ...
+  ...;
 }
 /* Never use !important unless absolutely necessary */
 ```
@@ -869,6 +914,7 @@ Example:
 For each enhanced template, verify:
 
 **Data Rendering**
+
 - [ ] Name displays: "Shanmuga Priya Kannan"
 - [ ] Job title visible: "Senior ServiceNow Developer"
 - [ ] All 5 projects show: Shopping System, Market Analysis, Real Estate, Lung Cancer, NYC Taxi
@@ -879,6 +925,7 @@ For each enhanced template, verify:
 - [ ] Work experience: 2020-2023 dates correct
 
 **Visual Quality**
+
 - [ ] No text overflow or wrapping issues
 - [ ] Consistent spacing and alignment
 - [ ] Template-specific styling applied
@@ -886,6 +933,7 @@ For each enhanced template, verify:
 - [ ] Professional appearance
 
 **Functionality**
+
 - [ ] Print preview looks good
 - [ ] PDF export works
 - [ ] Mobile responsive (if applicable)
@@ -901,4 +949,3 @@ For each enhanced template, verify:
 3. **Test with Shanmuga's JSON**
 4. **Continue with remaining templates**
 5. **Merge enhancements to main**
-

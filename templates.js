@@ -2560,8 +2560,13 @@ ${(
                 <div class="zen-entry">
                   <h3>${proj.name}</h3>
                   ${
-                    proj.description
-                      ? `<p class="zen-text">${proj.description}</p>`
+                    proj.summary
+                      ? `<p class="zen-text">${proj.summary}</p>`
+                      : ""
+                  }
+                  ${
+                    proj.keywords && proj.keywords.length
+                      ? `<p class="zen-text"><strong>Tech:</strong> ${proj.keywords.join(", ")}</p>`
                       : ""
                   }
                 </div>

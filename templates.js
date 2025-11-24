@@ -2566,7 +2566,9 @@ ${(
                   }
                   ${
                     proj.keywords && proj.keywords.length
-                      ? `<p class="zen-text"><strong>Tech:</strong> ${proj.keywords.join(", ")}</p>`
+                      ? `<p class="zen-text"><strong>Tech:</strong> ${proj.keywords.join(
+                          ", "
+                        )}</p>`
                       : ""
                   }
                 </div>
@@ -2832,6 +2834,35 @@ ${(
             `
                 : ""
             }
+
+            ${
+              data.projects && data.projects.length
+                ? `
+              <section class="colorful-section" style="border-top: 4px solid ${
+                colors[3]
+              }">
+                <h2>Projects</h2>
+                ${data.projects
+                  .map(
+                    (proj, idx) => `
+                  <div class="colorful-item" style="border-left: 3px solid ${
+                    colors[(idx + 1) % colors.length]
+                  }">
+                    <h3>${proj.name || "Project"}</h3>
+                    ${proj.summary ? `<p>${proj.summary}</p>` : ""}
+                    ${
+                      proj.keywords && proj.keywords.length
+                        ? `<p class="project-tech"><strong>Tech:</strong> ${proj.keywords.join(", ")}</p>`
+                        : ""
+                    }
+                  </div>
+                `
+                  )
+                  .join("")}
+              </section>
+            `
+                : ""
+            }
           </div>
         </div>
       `;
@@ -2916,6 +2947,12 @@ ${(
           border-radius: 20px;
           font-size: 11px;
           font-weight: 600;
+        }
+        .project-tech {
+          font-size: 11px;
+          color: #666;
+          margin: 8px 0 0 0;
+          font-style: italic;
         }
       `;
 

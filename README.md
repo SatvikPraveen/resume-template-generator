@@ -14,46 +14,58 @@ A powerful, locally-run web application that extracts data from PDF resumes and 
 ✅ **Export Options** - Save as HTML, JSON, or print-ready PDF  
 ✅ **Print-Friendly** - Clean, borderless output optimized for professional documents  
 ✅ **Offline-First** - All processing happens locally in your browser  
-✅ **No Dependencies** - Uses only PDF.js for extraction, zero backend required  
+✅ **No Dependencies** - Uses only PDF.js for extraction, zero backend required
 
 ---
 
 ## 🎨 Template Showcase
 
 ### 1. **Tech** - Terminal/CLI Aesthetic
+
 Neon green terminal emulator with bash-style commands. Perfect for developers and engineers.
 
 ### 2. **Dark** - Cyberpunk Style
+
 Neon accents with Unicode box drawing and glitch effects. Modern and eye-catching.
 
 ### 3. **Modern** - Sidebar Portfolio
+
 2-column layout with gradient sidebar and skill badges. Clean and professional.
 
 ### 4. **Creative** - Card-Based Portfolio
+
 Hero section with stats cards and masonry project grid. Design-focused.
 
 ### 5. **Executive** - Formal Corporate
+
 Serif typography with decorative lines. Enterprise-ready prestige.
 
 ### 6. **Compact** - Swiss Grid Design
+
 Minimalist 2-column layout with crisp typography. Maximum clarity.
 
 ### 7. **Minimal** - Zen Aesthetic
+
 Generous whitespace and calm color palette. Distraction-free.
 
 ### 8. **Colorful** - Vibrant Carnival
+
 Rainbow accents and dynamic badges. Bold and memorable.
 
 ### 9. **ATS-Friendly** - Semantic HTML
+
 Plain, machine-readable format optimized for resume parsing systems.
 
 ### 10. **Academic** - University CV Format
+
 Research publication style with centered layout. Scholarly presentations.
 
 ### 11. **Corporate** - Fortune 500 Biography
+
 Enterprise biography style. C-suite ready.
 
 ### 12. **Classic** - LinkedIn Standard
+
 Professional standard layout. Always reliable.
 
 ---
@@ -61,33 +73,39 @@ Professional standard layout. Always reliable.
 ## 🚀 Quick Start
 
 ### Prerequisites
+
 - Modern web browser (Chrome, Firefox, Safari, Edge)
 - Python 3.7+ (for local server)
 
 ### Installation & Local Development
 
 1. **Clone the repository**
+
 ```bash
 git clone https://github.com/yourusername/resume-template-generator.git
 cd resume-template-generator
 ```
 
 2. **Start local server**
+
 ```bash
 python -m http.server 8000
 ```
 
 3. **Open in browser**
+
 ```
 http://localhost:8000
 ```
 
 4. **Upload your resume**
+
 - Click "Upload PDF Resume"
 - Select your PDF file
 - Click "Parse Resume"
 
 5. **Explore templates**
+
 - Click any template card to preview
 - See your data instantly rendered
 - Export as HTML, JSON, or PDF
@@ -118,6 +136,7 @@ git checkout main
 ### Step 3: Verify Deployment
 
 After a few minutes, your site will be available at:
+
 ```
 https://yourusername.github.io/resume-template-generator
 ```
@@ -125,8 +144,9 @@ https://yourusername.github.io/resume-template-generator
 ### Step 4: Update Configuration (Optional)
 
 Add to `index.html` `<head>`:
+
 ```html
-<base href="/resume-template-generator/">
+<base href="/resume-template-generator/" />
 ```
 
 This ensures assets load correctly from the subdirectory.
@@ -134,6 +154,7 @@ This ensures assets load correctly from the subdirectory.
 ### Step 5: Custom Domain (Optional)
 
 To use a custom domain:
+
 1. Settings → Pages → Custom domain
 2. Enter your domain (e.g., `resume.yoursite.com`)
 3. Update DNS CNAME record to point to `yourusername.github.io`
@@ -163,6 +184,7 @@ resume-template-generator/
 ## 📖 How It Works
 
 ### Phase 1: PDF Parsing
+
 - Upload your PDF resume
 - PDF.js extracts raw text
 - Advanced regex patterns identify sections:
@@ -173,17 +195,20 @@ resume-template-generator/
   - **Projects** - Name, description, technologies used
 
 ### Phase 2: Data Normalization
+
 - Clean malformed text and spacing
 - Standardize date formats
 - Extract structured JSON
 
 ### Phase 3: Template Rendering
+
 - Select desired template
 - Data flows into template's render function
 - HTML + CSS combined
 - Real-time preview displayed
 
 ### Phase 4: Export
+
 - **HTML** - Standalone file with embedded CSS
 - **JSON** - Structured data for other tools
 - **PDF** - Print-optimized version (no borders, clean layout)
@@ -207,7 +232,7 @@ resume-template-generator/
 ✅ **Offline-Capable** - Works without internet connection  
 ✅ **Client-Side Processing** - All computation in your browser  
 ✅ **No Tracking** - No analytics, cookies, or tracking pixels  
-✅ **GDPR Compliant** - Your resume never leaves your device  
+✅ **GDPR Compliant** - Your resume never leaves your device
 
 ---
 
@@ -274,10 +299,12 @@ Extracted data follows this structure:
 ## 🎓 Learning Resources
 
 ### For Users
+
 - [JSON Resume Standard](https://jsonresume.org/)
 - [Resume Best Practices](https://www.indeed.com/career-advice/resumes)
 
 ### For Developers
+
 - [PDF.js Documentation](https://mozilla.github.io/pdf.js/)
 - [GitHub Pages Guide](https://pages.github.com/)
 - [CSS Grid Reference](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Grid_Layout)
@@ -313,16 +340,19 @@ This project is licensed under the **MIT License** - see the LICENSE file for de
 ## 🐛 Troubleshooting
 
 ### PDF Won't Parse
+
 - Ensure PDF is text-based (not scanned image)
 - Try reducing file size
 - Check browser console for errors (F12)
 
 ### Template Not Displaying
+
 - Clear browser cache (Ctrl+Shift+Delete)
 - Hard refresh page (Ctrl+Shift+R)
 - Check JavaScript console for errors
 
 ### Export Not Working
+
 - Ensure you've parsed a resume first
 - Try different export format
 - Check browser permissions for downloads
@@ -349,6 +379,7 @@ This project is licensed under the **MIT License** - see the LICENSE file for de
 ## 🔮 Roadmap
 
 ### v1.1 (Planned)
+
 - [ ] Drag-and-drop file upload
 - [ ] Additional templates (Gradient, Minimalist, Startup)
 - [ ] Custom color themes
@@ -356,6 +387,7 @@ This project is licensed under the **MIT License** - see the LICENSE file for de
 - [ ] Field editing before export
 
 ### v2.0 (Future)
+
 - [ ] Multi-resume management
 - [ ] Template builder UI
 - [ ] Cloud sync (optional)

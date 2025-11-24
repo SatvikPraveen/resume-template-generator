@@ -131,10 +131,18 @@ const TEMPLATES = {
                   (proj) => `
                 <div class="entry">
                   <h3>${proj.name || "Project"}</h3>
-                  ${proj.description ? `<p>${proj.description}</p>` : ""}
+                  ${proj.summary ? `<p>${proj.summary}</p>` : ""}
+                  ${
+                    proj.keywords && proj.keywords.length
+                      ? `<p class="project-tech"><strong>Tech:</strong> ${proj.keywords.join(
+                          ", "
+                        )}</p>`
+                      : ""
+                  }
                 </div>
               `
                 )
+                .join("")}
                 .join("")}
             </section>
           `
@@ -240,6 +248,12 @@ const TEMPLATES = {
           font-size: 11px;
           margin: 3px 0 0 0;
           color: #666;
+        }
+        .project-tech {
+          font-size: 11px;
+          color: #666;
+          margin: 5px 0 0 0;
+          font-style: italic;
         }
       `;
 
@@ -418,7 +432,14 @@ const TEMPLATES = {
                       (proj) => `
                     <div class="project-card">
                       <h3>${proj.name || "Project"}</h3>
-                      ${proj.description ? `<p>${proj.description}</p>` : ""}
+                      ${proj.summary ? `<p>${proj.summary}</p>` : ""}
+                      ${
+                        proj.keywords && proj.keywords.length
+                          ? `<p class="project-tech"><strong>Tech:</strong> ${proj.keywords.join(
+                              ", "
+                            )}</p>`
+                          : ""
+                      }
                     </div>
                   `
                     )
@@ -608,6 +629,12 @@ const TEMPLATES = {
           line-height: 1.5;
           margin: 0;
         }
+        .project-tech {
+          font-size: 11px;
+          color: #667eea;
+          margin: 8px 0 0 0;
+          font-style: italic;
+        }
         @media print {
           .modern-sidebar { background: white; color: #1a1a1a; }
           .badge { background: #f0f0f0; color: #1a1a1a; border: 1px solid #ddd; }
@@ -755,8 +782,15 @@ const TEMPLATES = {
                       <h3>${proj.name || "Project"}</h3>
                     </div>
                     ${
-                      proj.description
-                        ? `<p class="project-desc">${proj.description}</p>`
+                      proj.summary
+                        ? `<p class="project-desc">${proj.summary}</p>`
+                        : ""
+                    }
+                    ${
+                      proj.keywords && proj.keywords.length
+                        ? `<p class="project-tech"><strong>Tech:</strong> ${proj.keywords.join(
+                            ", "
+                          )}</p>`
                         : ""
                     }
                   </div>
@@ -988,6 +1022,12 @@ const TEMPLATES = {
           line-height: 1.5;
           color: #666;
           margin: 0;
+        }
+        .project-tech {
+          font-size: 11px;
+          color: #667eea;
+          margin: 8px 0 0 0;
+          font-style: italic;
         }
         .skills-cloud {
           display: flex;
@@ -1862,8 +1902,15 @@ const TEMPLATES = {
                 <div class="formal-entry compact">
                   <h3>▸ ${proj.name || "Project"}</h3>
                   ${
-                    proj.description
-                      ? `<p class="formal-text">${proj.description}</p>`
+                    proj.summary
+                      ? `<p class="formal-text">${proj.summary}</p>`
+                      : ""
+                  }
+                  ${
+                    proj.keywords && proj.keywords.length
+                      ? `<p class="project-tech"><strong>Tech:</strong> ${proj.keywords.join(
+                          ", "
+                        )}</p>`
                       : ""
                   }
                 </div>
@@ -1980,6 +2027,12 @@ const TEMPLATES = {
           line-height: 1.6;
           color: #555;
           margin: 6px 0 0 0;
+        }
+        .project-tech {
+          font-size: 10px;
+          color: #666;
+          margin: 4px 0 0 0;
+          font-style: italic;
         }
         .competencies-grid {
           display: grid;
@@ -2180,7 +2233,14 @@ const TEMPLATES = {
                       (proj) => `
                     <div class="project-item">
                       <h3>${proj.name}</h3>
-                      ${proj.description ? `<p>${proj.description}</p>` : ""}
+                      ${proj.summary ? `<p>${proj.summary}</p>` : ""}
+                      ${
+                        proj.keywords && proj.keywords.length
+                          ? `<p class="project-tech"><strong>Tech:</strong> ${proj.keywords.join(
+                              ", "
+                            )}</p>`
+                          : ""
+                      }
                     </div>
                   `
                     )
@@ -2332,6 +2392,12 @@ const TEMPLATES = {
           font-size: 9px;
           margin: 0;
           color: #666;
+        }
+        .project-tech {
+          font-size: 9px;
+          color: #666;
+          margin: 4px 0 0 0;
+          font-style: italic;
         }
       `;
 
@@ -2603,6 +2669,13 @@ const TEMPLATES = {
           color: #7f8c8d;
           margin: 0;
           line-height: 1.5;
+          font-weight: 300;
+        }
+        .project-tech {
+          font-size: 11px;
+          color: #7f8c8d;
+          margin: 8px 0 0 0;
+          font-style: italic;
           font-weight: 300;
         }
       `;

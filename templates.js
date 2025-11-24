@@ -155,7 +155,7 @@ const TEMPLATES = {
           font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
           line-height: 1.6;
           color: #000;
-          background: linear-gradient(135deg, #8B6F47 0%, #A0826D 100%);
+          background: linear-gradient(135deg, #C9B49A 0%, #D4C4B0 100%);
           padding: 40px;
           border-radius: 8px;
         }
@@ -163,6 +163,9 @@ const TEMPLATES = {
           border-bottom: 3px solid #5D4E37;
           padding-bottom: 20px;
           margin-bottom: 30px;
+          background: rgba(255, 255, 255, 0.7);
+          padding: 20px;
+          border-radius: 8px;
         }
         .resume-header h1 {
           font-size: 28px;
@@ -197,6 +200,10 @@ const TEMPLATES = {
         }
         .resume-section {
           margin-bottom: 25px;
+          background: rgba(255, 255, 255, 0.8);
+          padding: 20px;
+          border-radius: 8px;
+          border-left: 4px solid #5D4E37;
         }
         .resume-section h2 {
           font-size: 16px;
@@ -205,6 +212,7 @@ const TEMPLATES = {
           padding-bottom: 8px;
           margin-bottom: 15px;
           color: #000;
+          margin-top: 0;
         }
         .entry {
           margin-bottom: 15px;

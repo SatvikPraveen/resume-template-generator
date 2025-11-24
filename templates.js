@@ -3514,6 +3514,9 @@ ${(
           color: #000;
           line-height: 1.5;
           font-size: 12px;
+          background: #ffffff;
+          padding: 40px;
+          border-radius: 8px;
         }
         .resume-content.ats h1 {
           font-size: 16px;

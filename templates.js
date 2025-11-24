@@ -3545,6 +3545,9 @@ ${(
         .contact {
           font-size: 10px;
           margin-bottom: 10px;
+          word-break: break-word;
+          overflow-wrap: break-word;
+          hyphens: auto;
         }
       `;
 

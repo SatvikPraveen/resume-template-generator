@@ -1126,9 +1126,7 @@ const TEMPLATES = {
             <pre>
  ╔══════════════════════════════════════════════════════════╗
  ║  &gt; ${(data.basics?.name || "DEVELOPER").padEnd(48)}║
- ║  &gt; ${formatDate(data.work?.[data.work.length - 1]?.startDate, "").padEnd(
-   48
- )}║
+ ║  &gt; ${(data.basics?.phone || "Contact Info").padEnd(48)}║
  ╚══════════════════════════════════════════════════════════╝
             </pre>
           </div>

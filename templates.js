@@ -3494,7 +3494,9 @@ ${(
               ${proj.summary ? `<p>${proj.summary}</p>` : ""}
               ${
                 proj.keywords && proj.keywords.length
-                  ? `<p><strong>Technologies:</strong> ${proj.keywords.join(", ")}</p>`
+                  ? `<p><strong>Technologies:</strong> ${proj.keywords.join(
+                      ", "
+                    )}</p>`
                   : ""
               }
             `
@@ -3683,6 +3685,9 @@ ${(
           font-family: 'Georgia', serif;
           color: #2c3e50;
           line-height: 1.6;
+          background: #ffffff;
+          padding: 40px;
+          border-radius: 8px;
         }
         .name {
           font-size: 24px;

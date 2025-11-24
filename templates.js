@@ -1402,16 +1402,19 @@ const TEMPLATES = {
 
         .ascii-header {
           text-align: center;
-          margin-bottom: 30px;
+          margin: 50px auto 50px auto;
           color: #00ff88;
           opacity: 0.8;
           font-size: 11px;
           font-weight: bold;
+          display: flex;
+          justify-content: center;
         }
 
         .ascii-header pre {
           margin: 0;
           letter-spacing: 1px;
+          width: fit-content;
         }
 
         .terminal-emulator {

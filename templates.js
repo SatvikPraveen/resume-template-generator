@@ -2852,7 +2852,9 @@ ${(
                     ${proj.summary ? `<p>${proj.summary}</p>` : ""}
                     ${
                       proj.keywords && proj.keywords.length
-                        ? `<p class="project-tech"><strong>Tech:</strong> ${proj.keywords.join(", ")}</p>`
+                        ? `<p class="project-tech"><strong>Tech:</strong> ${proj.keywords.join(
+                            ", "
+                          )}</p>`
                         : ""
                     }
                   </div>
@@ -3477,6 +3479,27 @@ ${(
                   }`
               )
               .join(" | ")}</p>
+          `
+              : ""
+          }
+
+          ${
+            data.projects && data.projects.length
+              ? `
+            <h2>PROJECTS</h2>
+            ${data.projects
+              .map(
+                (proj) => `
+              <h3>${proj.name || "Project"}</h3>
+              ${proj.summary ? `<p>${proj.summary}</p>` : ""}
+              ${
+                proj.keywords && proj.keywords.length
+                  ? `<p><strong>Technologies:</strong> ${proj.keywords.join(", ")}</p>`
+                  : ""
+              }
+            `
+              )
+              .join("")}
           `
               : ""
           }

@@ -21,6 +21,7 @@ A powerful, locally-run web application that extracts data from PDF resumes and 
 ## 🎨 Template Showcase
 
 **All 12 templates are fully functional and optimized with:**
+
 - ✅ Project section support (displays project name, summary, and technologies)
 - ✅ Professional styling and layouts
 - ✅ Print-ready formatting
